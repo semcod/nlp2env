@@ -2,20 +2,39 @@
 
 app {
   name: nlp2env;
-  version: 0.1.2;
+  version: 0.1.3;
   description: "MCP server for reading and writing .env variables (email/SMTP and custom keys)";
   license: Apache-2.0;
 }
 
 dependencies {
+  mcp: mcp>=1.0;
+  uri: pyyaml>=6.0;
+  nlp2uri: "nlp2uri>=0.4.12, pyyaml>=6.0";
   dev: "pytest>=8.0, mcp>=1.0, goal>=2.1.0, costs>=0.1.20, pfix>=0.1.60";
+}
+
+interface[type="mcp"] {
+  framework: stdio;
+  tools: nlp2env_apply_text, nlp2env_backup, nlp2env_delete, nlp2env_email_status, nlp2env_get, nlp2env_interfaces, nlp2env_list, nlp2env_set, nlp2env_set_email;
+}
+interface[type="mcp"] page[name="nlp2env-mcp"] {
+  entry: nlp2env_mcp.server:main;
 }
 
 interface[type="cli"] {
   framework: argparse;
 }
-interface[type="cli"] page[name="nlp2env-mcp"] {
+interface[type="cli"] page[name="uri2env"] {
+  entry: uri2env.cli:main;
+}
 
+integration[name="email"] {
+  type: smtp;
+}
+
+integration[name="nlp"] {
+  type: api;
 }
 
 workflow[name="venv"] {
@@ -59,17 +78,37 @@ workflow[name="examples-all"] {
   step-1: run cmd=echo "ALL EXAMPLES + MULTILANG OK";
 }
 
+tests {
+  import: examples/write/smtp-email/**/*.testql.toon.yaml;
+  import: testql-scenarios/**/*.testql.toon.yaml;
+}
+
+env_vars {
+  keys: PFIX_MODEL, PFIX_API_BASE, OLLAMA_API_BASE, OPENROUTER_API_KEY, PFIX_AUTO_APPLY, PFIX_AUTO_INSTALL_DEPS, PFIX_AUTO_RESTART, PFIX_MAX_RETRIES, PFIX_DRY_RUN, PFIX_ENABLED, PFIX_GIT_COMMIT, PFIX_GIT_PREFIX, PFIX_CREATE_BACKUPS, OLLAMA_API_URL, OLLAMA_LLM_MODEL, SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD, SMTP_TLS, SMTP_FROM, SMTP_TIMEOUT, NLP2ENV_ENV_FILE, NLP2ENV_PROJECT_DIR;
+  profile_smtp: SMTP_FROM, SMTP_HOST, SMTP_PASSWORD, SMTP_PORT, SMTP_TIMEOUT, SMTP_TLS, SMTP_USER;
+  runtime_nlp2env: NLP2ENV_ENV_FILE, NLP2ENV_PROJECT_DIR;
+}
+
 deploy {
   target: makefile;
 }
 
 environment[name="local"] {
-  runtime: docker-compose;
+  runtime: python;
   env_file: .env;
+  template_file: .env.example;
   python_version: >=3.10;
+  vars: OLLAMA_API_BASE, OLLAMA_API_URL, OLLAMA_LLM_MODEL, OPENROUTER_API_KEY, PFIX_API_BASE, PFIX_AUTO_APPLY, PFIX_AUTO_INSTALL_DEPS, PFIX_AUTO_RESTART, PFIX_CREATE_BACKUPS, PFIX_DRY_RUN, PFIX_ENABLED, PFIX_GIT_COMMIT, PFIX_GIT_PREFIX, PFIX_MAX_RETRIES, PFIX_MODEL, SMTP_FROM, SMTP_HOST, SMTP_PASSWORD, SMTP_PORT, SMTP_TIMEOUT, SMTP_TLS, SMTP_USER;
+  profile_smtp: SMTP_FROM, SMTP_HOST, SMTP_PASSWORD, SMTP_PORT, SMTP_TIMEOUT, SMTP_TLS, SMTP_USER;
+  runtime_llm: OPENROUTER_API_KEY;
+  runtime_nlp2env: NLP2ENV_ENV_FILE, NLP2ENV_PROJECT_DIR;
+  runtime_ollama: OLLAMA_API_BASE, OLLAMA_API_URL, OLLAMA_LLM_MODEL;
+  runtime_pfix: PFIX_API_BASE, PFIX_AUTO_APPLY, PFIX_AUTO_INSTALL_DEPS, PFIX_AUTO_RESTART, PFIX_CREATE_BACKUPS, PFIX_DRY_RUN, PFIX_ENABLED, PFIX_GIT_COMMIT, PFIX_GIT_PREFIX, PFIX_MAX_RETRIES, PFIX_MODEL;
 }
 
 environment[name="ollama"] {
-  runtime: docker-compose;
+  runtime: python;
   env_file: .env.ollama;
+  vars: OLLAMA_API_URL, OLLAMA_LLM_MODEL;
+  runtime_ollama: OLLAMA_API_URL, OLLAMA_LLM_MODEL;
 }
