@@ -20,6 +20,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.4] - 2026-06-08
+
+### Docs
+- Update README.md
+
+### Test
+- Update tests/test_crypto.py
+- Update tests/test_env_file.py
+- Update tests/test_mcp_tools.py
+- Update tests/test_validators.py
+
+### Other
+- Update app.doql.events.pb
+- Update deps.json
+- Update uv.lock
+
 ## [0.1.3] - 2026-06-08
 
 ### Docs

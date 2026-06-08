@@ -22,16 +22,41 @@ def mask_value(key: str, value: str) -> str:
     return value
 
 
-def resolve_env_path(path: str | Path | None = None) -> Path:
+def resolve_env_path(path: str | Path | None = None, suffix: str | None = None) -> Path:
     if path:
-        return Path(path).expanduser().resolve()
+        p = Path(path).expanduser().resolve()
+        if suffix:
+            return p.parent / f"{p.name}.{suffix}"
+        return p
     env_file = os.getenv("NLP2ENV_ENV_FILE", "").strip()
     if env_file:
-        return Path(env_file).expanduser().resolve()
+        p = Path(env_file).expanduser().resolve()
+        if suffix:
+            return p.parent / f"{p.name}.{suffix}"
+        return p
     project = os.getenv("NLP2ENV_PROJECT_DIR", "").strip()
     if project:
-        return (Path(project).expanduser() / ".env").resolve()
-    return Path.cwd() / ".env"
+        base = (Path(project).expanduser() / ".env").resolve()
+    else:
+        base = Path.cwd() / ".env"
+    if suffix:
+        return base.parent / f"{base.name}.{suffix}"
+    return base
+
+
+def _parse_line(raw: str) -> tuple[str, str] | None:
+    line = raw.strip()
+    if not line or line.startswith("#"):
+        return None
+    m = _LINE_RE.match(line)
+    if not m:
+        return None
+    key, val = m.group(1), m.group(2).strip()
+    if (val.startswith('"') and val.endswith('"')) or (
+        val.startswith("'") and val.endswith("'")
+    ):
+        val = val[1:-1]
+    return key, val
 
 
 @dataclass
@@ -45,22 +70,32 @@ class EnvFile:
         values: dict[str, str] = {}
         if resolved.is_file():
             for raw in resolved.read_text(encoding="utf-8").splitlines():
-                line = raw.strip()
-                if not line or line.startswith("#"):
-                    continue
-                m = _LINE_RE.match(line)
-                if not m:
-                    continue
-                key, val = m.group(1), m.group(2).strip()
-                if (val.startswith('"') and val.endswith('"')) or (
-                    val.startswith("'") and val.endswith("'")
-                ):
-                    val = val[1:-1]
-                values[key] = val
+                parsed = _parse_line(raw)
+                if parsed:
+                    values[parsed[0]] = parsed[1]
         return cls(path=resolved, values=values)
+
+    @classmethod
+    def load_multi(cls, path: str | Path | None = None, suffix: str = "local") -> EnvFile:
+        """Load base .env then overlay .env.{suffix} (override wins)."""
+        base = cls.load(path)
+        override_path = resolve_env_path(path, suffix=suffix)
+        if override_path != base.path and override_path.is_file():
+            override = cls.load(override_path)
+            base.values.update(override.values)
+        return base
 
     def get(self, key: str, default: str | None = None) -> str | None:
         return self.values.get(key, default)
+
+    def set(self, key: str, value: str, *, overwrite: bool = True) -> bool:
+        if not key or not re.match(r"^[A-Za-z_][A-Za-z0-9_]*$", key):
+            raise ValueError(f"Invalid env key: {key!r}")
+        if not overwrite and key in self.values:
+            return False
+        changed = self.values.get(key) != value
+        self.values[key] = value
+        return changed
 
     def set_many(self, updates: dict[str, str], *, overwrite: bool = True) -> dict[str, str]:
         changed: dict[str, str] = {}

@@ -10,7 +10,7 @@ __all__ = [
     "email_profile_from_dict",
 ]
 
-__version__ = "0.1.3"
+__version__ = "0.1.4"
 
 # Re-export uri2env for nlp2uri integration
 try:

@@ -4,18 +4,21 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "nlp2env"
-version = "0.1.3"
+version = "0.1.4"
 description = "MCP server for reading and writing .env variables (email/SMTP and custom keys)"
 readme = "README.md"
 requires-python = ">=3.10"
 license = "Apache-2.0"
-dependencies = []
+dependencies = [
+    "cryptography>=42.0",
+]
 
 [project.optional-dependencies]
 mcp = ["mcp>=1.0"]
 uri = ["pyyaml>=6.0"]
 nlp2uri = ["nlp2uri>=0.4.12", "pyyaml>=6.0"]
-dev = ["pytest>=8.0", "mcp>=1.0",
+crypto = ["cryptography>=42.0"]
+dev = ["pytest>=8.0", "mcp>=1.0", "cryptography>=42.0",
     "goal>=2.1.0",
     "costs>=0.1.20",
     "pfix>=0.1.60",
