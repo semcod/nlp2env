@@ -1,0 +1,7 @@
+services:
+  e2e:
+    build:
+      context: ../../..
+      dockerfile: examples/docker/nlp2env-e2e.Dockerfile
+      args:
+        E2E_SCRIPT: examples/write/smtp-email/e2e.sh

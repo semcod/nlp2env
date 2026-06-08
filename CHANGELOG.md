@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.2] - 2026-06-08
+
+### Docs
+- Update README.md
+- Update examples/README.md
+- Update examples/integrators/mcp-stdio/README.md
+- Update examples/integrators/todomat-dispatch/README.md
+- Update examples/write/apply-text/README.md
+- Update examples/write/custom-keys/README.md
+- Update examples/write/smtp-email/README.md
+
+### Other
+- Update Makefile
+- Update examples/docker/nlp2env-e2e.Dockerfile
+- Update examples/integrators/mcp-stdio/docker-compose.yml
+- Update examples/integrators/mcp-stdio/e2e.sh
+- Update examples/integrators/mcp-stdio/mcp-config.cursor.json
+- Update examples/integrators/todomat-dispatch/docker-compose.yml
+- Update examples/integrators/todomat-dispatch/e2e.sh
+- Update examples/integrators/todomat-dispatch/prompts.env
+- Update examples/run-e2e.sh
+- Update examples/write/apply-text/docker-compose.yml
+- ... and 6 more files
+
 ## [0.1.1] - 2026-06-07
 
 ### Docs

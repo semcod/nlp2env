@@ -111,22 +111,49 @@ def build_mcp() -> Any:
             }
         )
 
+    def _resolve_password(
+        password: str = "",
+        password_env: str | None = None,
+        password_file: str | None = None,
+    ) -> tuple[str | None, str | None]:
+        if password:
+            return password, None
+        if password_env:
+            val = os.getenv(password_env, "").strip()
+            if val:
+                return val, None
+            return None, f"Zmienna {password_env} nie jest ustawiona w środowisku MCP"
+        if password_file:
+            path = Path(password_file).expanduser()
+            if path.is_file():
+                return path.read_text(encoding="utf-8").strip(), None
+            return None, f"Brak pliku hasła: {path}"
+        return None, "Podaj password_env lub password_file — nie wklejaj hasła w czacie"
+
     @mcp.tool()
     def nlp2env_set_email(
         host: str,
         user: str,
-        password: str,
+        password: str = "",
         port: str = "587",
         tls: str = "1",
         from_addr: str = "",
+        password_env: str | None = None,
+        password_file: str | None = None,
         env_file: str | None = None,
     ) -> str:
-        """Save SMTP/email mailbox settings to .env (nlp2dsl-worker compatible)."""
+        """Save SMTP/email mailbox settings to .env (nlp2dsl-worker compatible).
+
+        Prefer password_env=SMTP_PASSWORD (set before MCP start) instead of password in chat.
+        """
+        resolved, pwd_err = _resolve_password(password, password_env, password_file)
+        if pwd_err:
+            return _err(pwd_err)
         payload = email_profile_from_dict(
             {
                 "host": host,
                 "user": user,
-                "password": password,
+                "password": resolved,
                 "port": port,
                 "tls": tls,
                 "from": from_addr or user,

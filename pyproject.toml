@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "nlp2env"
-version = "0.1.1"
+version = "0.1.2"
 description = "MCP server for reading and writing .env variables (email/SMTP and custom keys)"
 readme = "README.md"
 requires-python = ">=3.10"

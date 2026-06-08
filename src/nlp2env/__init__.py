@@ -10,4 +10,4 @@ __all__ = [
     "email_profile_from_dict",
 ]
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"

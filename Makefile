@@ -4,7 +4,7 @@ VENV ?= venv
 PIP := $(VENV)/bin/pip
 PYTEST := $(VENV)/bin/pytest
 
-.PHONY: help venv install install-mcp test test-mcp-live
+.PHONY: help venv install install-mcp test test-mcp-live examples
 
 help:
 	@echo "nlp2env"
@@ -12,6 +12,7 @@ help:
 	@echo "  make install-mcp  pip install -e \".[mcp]\""
 	@echo "  make test         pytest"
 	@echo "  make test-mcp-live  MCP stdio e2e (tmp .env)"
+	@echo "  make examples     run examples/run-e2e.sh"
 
 venv:
 	@test -x "$(PIP)" || $(PYTHON) -m venv "$(VENV)"
@@ -27,3 +28,6 @@ test: install-mcp
 
 test-mcp-live: install-mcp
 	./scripts/test-mcp-live.sh
+
+examples: install-mcp
+	./examples/run-e2e.sh

@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "nlp2env": {
+      "command": "nlp2env-mcp",
+      "env": {
+        "NLP2ENV_ENV_FILE": "${workspaceFolder}/.env",
+        "NLP2ENV_PROJECT_DIR": "${workspaceFolder}"
+      }
+    }
+  }
+}
