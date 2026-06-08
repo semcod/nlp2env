@@ -1,0 +1,44 @@
+flowchart TD
+%% generated in 0.00s
+    subgraph examples__integrators
+        examples__integrators__mcp_stdio__e2e__print["print"]
+        examples__integrators__todomat_dispatch__e2e__print["print"]
+    end
+    subgraph examples__write
+        examples__write__apply_text__e2e__print["print"]
+        examples__write__custom_keys__e2e__print["print"]
+    end
+    subgraph scripts__test_mcp_live
+        scripts__test_mcp_live__print["print"]
+    end
+    subgraph src__nlp2env
+        src__nlp2env__env_file__mask_value["mask_value"]
+        src__nlp2env__env_file__resolve_env_path["resolve_env_path"]
+        src__nlp2env__env_file__EnvFile__load("load CC=10")
+        src__nlp2env__env_file__EnvFile__get["get"]
+        src__nlp2env__env_file__EnvFile__set_many["set_many"]
+        src__nlp2env__env_file__EnvFile__delete["delete"]
+        src__nlp2env__env_file__EnvFile__list_masked["list_masked"]
+        src__nlp2env__env_file__EnvFile__backup["backup"]
+        src__nlp2env__env_file__EnvFile__save["save"]
+        src__nlp2env__env_file__EnvFile__apply_text["apply_text"]
+        src__nlp2env__profiles__email_profile_from_dict["email_profile_from_dict"]
+        src__nlp2env__profiles__email_profile_status["email_profile_status"]
+    end
+    subgraph src__nlp2env_mcp
+        src__nlp2env_mcp__server___ok["_ok"]
+        src__nlp2env_mcp__server___err["_err"]
+        src__nlp2env_mcp__server___load["_load"]
+        src__nlp2env_mcp__server__build_mcp["build_mcp"]
+        src__nlp2env_mcp__server__main["main"]
+    end
+    src__nlp2env_mcp__server__build_mcp --> src__nlp2env__env_file__resolve_env_path
+    src__nlp2env_mcp__server__build_mcp --> src__nlp2env_mcp__server___ok
+    src__nlp2env_mcp__server__build_mcp --> src__nlp2env_mcp__server___load
+    src__nlp2env_mcp__server__main --> src__nlp2env_mcp__server__build_mcp
+    src__nlp2env__env_file__EnvFile__load --> src__nlp2env__env_file__resolve_env_path
+    src__nlp2env__env_file__EnvFile__list_masked --> src__nlp2env__env_file__mask_value
+
+    classDef highCC fill:#ff6b6b,stroke:#c92a2a,color:#fff
+    classDef medCC fill:#ffd43b,stroke:#f08c00,color:#000
+    class src__nlp2env__env_file__EnvFile__load medCC

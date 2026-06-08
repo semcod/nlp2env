@@ -1641,7 +1641,7 @@ wheels = [
 
 [[package]]
 name = "nlp2env"
-version = "0.1.2"
+version = "0.1.3"
 source = { editable = "." }
 
 [package.optional-dependencies]
@@ -1655,6 +1655,13 @@ dev = [
 mcp = [
     { name = "mcp" },
 ]
+nlp2uri = [
+    { name = "nlp2uri" },
+    { name = "pyyaml" },
+]
+uri = [
+    { name = "pyyaml" },
+]
 
 [package.metadata]
 requires-dist = [
@@ -1662,10 +1669,25 @@ requires-dist = [
     { name = "goal", marker = "extra == 'dev'", specifier = ">=2.1.0" },
     { name = "mcp", marker = "extra == 'dev'", specifier = ">=1.0" },
     { name = "mcp", marker = "extra == 'mcp'", specifier = ">=1.0" },
+    { name = "nlp2uri", marker = "extra == 'nlp2uri'", specifier = ">=0.4.12" },
     { name = "pfix", marker = "extra == 'dev'", specifier = ">=0.1.60" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.0" },
+    { name = "pyyaml", marker = "extra == 'nlp2uri'", specifier = ">=6.0" },
+    { name = "pyyaml", marker = "extra == 'uri'", specifier = ">=6.0" },
 ]
-provides-extras = ["mcp", "dev"]
+provides-extras = ["mcp", "uri", "nlp2uri", "dev"]
+
+[[package]]
+name = "nlp2uri"
+version = "0.4.12"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "pyyaml" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/10/93/840bc02ff9a56a6d67b742005528d17cd0469d9825a09c28e1a94407b264/nlp2uri-0.4.12.tar.gz", hash = "sha256:842e0cd0ba6dce123673fccd6fefeb53d00b2a53ab2c12b6321dd9a317792dc0", size = 91229, upload-time = "2026-06-07T20:04:41.064Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a4/24/820d817cbd6d77a2a535dec60680938b587d24d096ed0da7b04543058db3/nlp2uri-0.4.12-py3-none-any.whl", hash = "sha256:d21a7fcd499ce5495e699a92799d369d72bbdd498375daa19efa5ce9c3de2738", size = 101199, upload-time = "2026-06-07T20:04:39.595Z" },
+]
 
 [[package]]
 name = "numpy"

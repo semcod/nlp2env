@@ -9,17 +9,16 @@ else
 fi
 # shellcheck source=examples/lib/common.sh
 source "$ROOT/examples/lib/common.sh"
-PYTHON="$(resolve_python "$ROOT")"
+
 WORKDIR="${WORKDIR:-/tmp/nlp2env-mcp-stdio-e2e}"
 ENV_FILE="$WORKDIR/.env"
 
 rm -rf "$WORKDIR"
 mkdir -p "$WORKDIR"
 export NLP2ENV_ENV_FILE="$ENV_FILE"
-export PATH="${ROOT}/.venv/bin:${ROOT}/venv/bin:/usr/local/bin:${PATH}"
-export PYTHONPATH="$ROOT/examples/lib:${PYTHONPATH:-}"
 
 cd "$ROOT"
+setup_example_env "$ROOT"
 
 "$PYTHON" - <<'PY'
 import asyncio

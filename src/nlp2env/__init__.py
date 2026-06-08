@@ -10,4 +10,10 @@ __all__ = [
     "email_profile_from_dict",
 ]
 
-__version__ = "0.1.2"
+__version__ = "0.1.3"
+
+# Re-export uri2env for nlp2uri integration
+try:
+    from uri2env import materialize_uri, uri_for_nlp2env_profile  # noqa: F401
+except ImportError:
+    pass

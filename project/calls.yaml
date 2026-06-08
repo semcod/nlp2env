@@ -1,0 +1,83 @@
+project: /home/tom/github/semcod/nlp2env
+generated_from: code2llm call graph analysis
+stats:
+  total_nodes: 6
+  total_edges: 3
+  modules_count: 2
+nodes:
+  src.nlp2env.env_file.resolve_env_path:
+    name: resolve_env_path
+    module: src.nlp2env.env_file
+    line: 25
+    cyclomatic_complexity: 4
+    calls_out: 14
+    calls_in: 2
+  src.nlp2env.env_file.mask_value:
+    name: mask_value
+    module: src.nlp2env.env_file
+    line: 17
+    cyclomatic_complexity: 4
+    calls_out: 2
+    calls_in: 7
+  src.nlp2env.env_file.EnvFile.list_masked:
+    name: list_masked
+    module: src.nlp2env.env_file
+    line: 83
+    cyclomatic_complexity: 2
+    calls_out: 3
+    calls_in: 0
+  src.nlp2env.env_file.EnvFile.load:
+    name: load
+    module: src.nlp2env.env_file
+    line: 43
+    cyclomatic_complexity: 10
+    calls_out: 15
+    calls_in: 0
+  src.nlp2env_mcp.server.build_mcp:
+    name: build_mcp
+    module: src.nlp2env_mcp.server
+    line: 35
+    cyclomatic_complexity: 2
+    calls_out: 95
+    calls_in: 1
+  src.nlp2env_mcp.server.main:
+    name: main
+    module: src.nlp2env_mcp.server
+    line: 238
+    cyclomatic_complexity: 1
+    calls_out: 2
+    calls_in: 0
+edges:
+- caller: src.nlp2env_mcp.server.main
+  callee: src.nlp2env_mcp.server.build_mcp
+  call_type: resolved
+- caller: src.nlp2env.env_file.EnvFile.load
+  callee: src.nlp2env.env_file.resolve_env_path
+  call_type: resolved
+- caller: src.nlp2env.env_file.EnvFile.list_masked
+  callee: src.nlp2env.env_file.mask_value
+  call_type: resolved
+modules:
+  src.nlp2env.env_file:
+  - src.nlp2env.env_file.EnvFile.list_masked
+  - src.nlp2env.env_file.EnvFile.load
+  - src.nlp2env.env_file.mask_value
+  - src.nlp2env.env_file.resolve_env_path
+  src.nlp2env_mcp.server:
+  - src.nlp2env_mcp.server.build_mcp
+  - src.nlp2env_mcp.server.main
+entry_points:
+- examples.integrators.mcp-stdio.e2e.print
+- examples.integrators.todomat-dispatch.e2e.print
+- examples.write.apply-text.e2e.print
+- examples.write.custom-keys.e2e.print
+- scripts.test-mcp-live.print
+- src.nlp2env.env_file.EnvFile.apply_text
+- src.nlp2env.env_file.EnvFile.backup
+- src.nlp2env.env_file.EnvFile.delete
+- src.nlp2env.env_file.EnvFile.get
+- src.nlp2env.env_file.EnvFile.list_masked
+- src.nlp2env.env_file.EnvFile.load
+- src.nlp2env.env_file.EnvFile.save
+- src.nlp2env.env_file.EnvFile.set_many
+- src.nlp2env_mcp.server.main

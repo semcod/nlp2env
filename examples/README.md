@@ -8,7 +8,7 @@ nlp2env **nie** zawiera własnego modelu NLP — agent (Cursor, todomat/orchestr
 
 | Path | Cel |
 |------|-----|
-| `examples/write/smtp-email` | Profil SMTP przez `nlp2env_set_email` |
+| `examples/write/smtp-email` | Profil SMTP — **`*.testql.toon.yaml`** (TestQL), logi |
 | `examples/write/apply-text` | Blok tekstu `KEY=value` przez `nlp2env_apply_text` |
 | `examples/write/custom-keys` | Dowolne klucze przez `nlp2env_set` (JSON) |
 | `examples/integrators/mcp-stdio` | Smoke test MCP stdio + config Cursor |
@@ -17,8 +17,29 @@ nlp2env **nie** zawiera własnego modelu NLP — agent (Cursor, todomat/orchestr
 ## Uruchom lokalnie
 
 ```bash
+make install-mcp
+make examples              # szybkie (~30s): pytest + 5 scenariuszy inline (TestTOON)
+make examples-multilang    # 26 promptów LLM/Ollama, 16 języków (~3 min)
+make examples-all          # oba powyższe
+
+# lub ręcznie:
 ./examples/run-e2e.sh
+NLP2ENV_RUN_MULTILANG=1 ./examples/run-e2e.sh   # + test wielojęzyczny
 ```
+
+Jeśli masz dwa venv (`.venv` i `venv/`), skrypt wybiera Python z zainstalowanym `mcp`.
+
+### Test wielojęzyczny — `smtp-email-multilang.testql.toon.yaml`
+
+Scenariusze w formacie **TestQL TestTOON** (`*.testql.toon.yaml`) — kompatybilne z ekosystemem [testql](https://github.com/oqlos/testql). DOQL (`app.doql.less`) importuje te pliki jako `TESTS`.
+
+```bash
+export SMTP_PASSWORD=e2e-test-secret-42
+./examples/write/smtp-email/e2e-multilang.sh
+tail examples/write/smtp-email/prompts-multilang.log.txt
+```
+
+Dokumentacja formatu: [`examples/write/smtp-email/README.md`](write/smtp-email/README.md).
 
 ## Uruchom w Dockerze (pojedynczy przykład)
 

@@ -1,0 +1,99 @@
+# SCENARIO: smtp-email
+# TYPE: nlp2env
+# VERSION: 1.0
+# SOURCE: prompts.txt
+
+CONFIG[1]{key, value}:
+  password_env, SMTP_PASSWORD
+
+PROMPTS[22]{id, lang, source, nl, tool, after, assert_configured}:
+pl-1, -, llm, "Ustaw serwer pocztowy na smtp.wp.pl, user tomek@wp.pl, port 465, ustaw password_env jako SMTP_PASSWORD", -, -, false
+en-1, -, llm, "Set SMTP server to smtp.gmail.com, user john@gmail.com, port 587", -, -, false
+de-1, -, llm, "Konfigurieren Sie den SMTP-Server auf smtp.mail.yahoo.de, Benutzer hans@yahoo.de, Port 465", -, -, false
+fr-1, -, llm, "Définir le serveur SMTP sur smtp.orange.fr, utilisateur jean@orange.fr, port 587", -, -, false
+es-1, -, llm, "Configurar el servidor SMTP a smtp.outlook.com, usuario carlos@outlook.com, puerto 587", -, -, false
+it-1, -, llm, "Impostare il server SMTP su smtp.libero.it, utente mario@libero.it, porta 465", -, -, false
+pt-1, -, llm, "Configurar o servidor SMTP para smtp.sapo.pt, utilizador joao@sapo.pt, porta 587", -, -, false
+nl-1, -, llm, "Stel de SMTP-server in op smtp.ziggo.nl, gebruiker jan@ziggo.nl, poort 587", -, -, false
+cs-1, -, llm, "Nastavte SMTP server na smtp.seznam.cz, uživatel petr@seznam.cz, port 465", -, -, false
+sv-1, -, llm, "Ställ in SMTP-servern på smtp.telia.com, användare sven@telia.com, port 587", -, -, false
+pl-2, -, llm, Zmień host smtp na mail.firma.pl dla uzytkownika biuro@firma.pl na porcie 25, -, -, false
+en-2, -, llm, "Please update the email configuration. The host is smtp.sendgrid.net, port 587, and user is apikey.", -, -, false
+de-2, -, llm, "SMTP-Host ist mail.gmx.net, Port 587, Benutzername ist anna@gmx.net.", -, -, false
+fr-2, -, llm, "Le serveur de messagerie est smtp.laposte.net, le port 465, et l'utilisateur marie@laposte.net.", -, -, false
+es-2, -, llm, "Cambia la configuración de correo: host smtp.zoho.com, puerto 465, usuario admin@zoho.com.", -, -, false
+it-2, -, llm, "Aggiorna host SMTP a smtp.fastweb.it, porta 587, utente luigi@fastweb.it.", -, -, false
+pt-2, -, llm, "Atualizar as configurações de e-mail para host smtp.mail.com, porta 465, usuário teste@mail.com.", -, -, false
+nl-2, -, llm, "Wijzig de e-mail host naar smtp.kpnmail.nl, poort 587, gebruiker dirk@kpnmail.nl.", -, -, false
+cs-2, -, llm, "Změnit nastavení pošty: host smtp.centrum.cz, port 465, uživatel karel@centrum.cz.", -, -, false
+sv-2, -, llm, "Uppdatera e-postinställningarna till host smtp.bredband.net, port 587, användare lars@bredband.net.", -, -, false
+pl-3, -, llm, "Skonfiguruj wysyłanie maili przez wp.pl, login to janek, a port ustaw na 587. Host to smtp.wp.pl", -, -, false
+en-3, -, llm, "My outgoing mail server is smtp.zoho.eu, the username should be info@mycompany.com and we use port 465.", -, -, false
+
+ASSERT_ENV[66]{prompt_id, expect}:
+  pl-1, SMTP_HOST=smtp.wp.pl
+  pl-1, SMTP_USER=tomek@wp.pl
+  pl-1, SMTP_PORT=465
+  en-1, SMTP_HOST=smtp.gmail.com
+  en-1, SMTP_USER=john@gmail.com
+  en-1, SMTP_PORT=587
+  de-1, SMTP_HOST=smtp.mail.yahoo.de
+  de-1, SMTP_USER=hans@yahoo.de
+  de-1, SMTP_PORT=465
+  fr-1, SMTP_HOST=smtp.orange.fr
+  fr-1, SMTP_USER=jean@orange.fr
+  fr-1, SMTP_PORT=587
+  es-1, SMTP_HOST=smtp.outlook.com
+  es-1, SMTP_USER=carlos@outlook.com
+  es-1, SMTP_PORT=587
+  it-1, SMTP_HOST=smtp.libero.it
+  it-1, SMTP_USER=mario@libero.it
+  it-1, SMTP_PORT=465
+  pt-1, SMTP_HOST=smtp.sapo.pt
+  pt-1, SMTP_USER=joao@sapo.pt
+  pt-1, SMTP_PORT=587
+  nl-1, SMTP_HOST=smtp.ziggo.nl
+  nl-1, SMTP_USER=jan@ziggo.nl
+  nl-1, SMTP_PORT=587
+  cs-1, SMTP_HOST=smtp.seznam.cz
+  cs-1, SMTP_USER=petr@seznam.cz
+  cs-1, SMTP_PORT=465
+  sv-1, SMTP_HOST=smtp.telia.com
+  sv-1, SMTP_USER=sven@telia.com
+  sv-1, SMTP_PORT=587
+  pl-2, SMTP_HOST=mail.firma.pl
+  pl-2, SMTP_USER=biuro@firma.pl
+  pl-2, SMTP_PORT=25
+  en-2, SMTP_HOST=smtp.sendgrid.net
+  en-2, SMTP_USER=apikey
+  en-2, SMTP_PORT=587
+  de-2, SMTP_HOST=mail.gmx.net
+  de-2, SMTP_USER=anna@gmx.net
+  de-2, SMTP_PORT=587
+  fr-2, SMTP_HOST=smtp.laposte.net
+  fr-2, SMTP_USER=marie@laposte.net
+  fr-2, SMTP_PORT=465
+  es-2, SMTP_HOST=smtp.zoho.com
+  es-2, SMTP_USER=admin@zoho.com
+  es-2, SMTP_PORT=465
+  it-2, SMTP_HOST=smtp.fastweb.it
+  it-2, SMTP_USER=luigi@fastweb.it
+  it-2, SMTP_PORT=587
+  pt-2, SMTP_HOST=smtp.mail.com
+  pt-2, SMTP_USER=teste@mail.com
+  pt-2, SMTP_PORT=465
+  nl-2, SMTP_HOST=smtp.kpnmail.nl
+  nl-2, SMTP_USER=dirk@kpnmail.nl
+  nl-2, SMTP_PORT=587
+  cs-2, SMTP_HOST=smtp.centrum.cz
+  cs-2, SMTP_USER=karel@centrum.cz
+  cs-2, SMTP_PORT=465
+  sv-2, SMTP_HOST=smtp.bredband.net
+  sv-2, SMTP_USER=lars@bredband.net
+  sv-2, SMTP_PORT=587
+  pl-3, SMTP_HOST=smtp.wp.pl
+  pl-3, SMTP_USER=janek
+  pl-3, SMTP_PORT=587
+  en-3, SMTP_HOST=smtp.zoho.eu
+  en-3, SMTP_USER=info@mycompany.com
+  en-3, SMTP_PORT=465

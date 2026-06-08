@@ -1,0 +1,75 @@
+# code2llm | 28f 1885L | shell:10,python:6,yml:5,txt:2,yaml:1,toml:1,json:1,env:1 | 2026-06-08
+# generated in 0.01s
+# CC̅=2.8 | critical:0/22 | dups:0 | cycles:0
+
+HEALTH[0]: ok
+
+REFACTOR[0]: none needed
+
+PIPELINES[8]:
+  [1] Src [main]: main → build_mcp → resolve_env_path
+      PURITY: 100% pure
+  [2] Src [load]: load → resolve_env_path
+      PURITY: 100% pure
+  [3] Src [get]: get
+      PURITY: 100% pure
+  [4] Src [set_many]: set_many
+      PURITY: 100% pure
+  [5] Src [list_masked]: list_masked → mask_value
+      PURITY: 100% pure
+  [6] Src [backup]: backup
+      PURITY: 100% pure
+  [7] Src [save]: save
+      PURITY: 100% pure
+  [8] Src [apply_text]: apply_text
+      PURITY: 100% pure
+
+LAYERS:
+  src/                            CC̄=3.6    ←in:0  →out:0
+  │ server                     243L  0C    5m  CC=2      ←0
+  │ env_file                   126L  1C   10m  CC=10     ←1
+  │ profiles                    65L  0C    2m  CC=5      ←1
+  │ __init__                    13L  0C    0m  CC=0.0    ←0
+  │ __main__                     6L  0C    0m  CC=0.0    ←0
+  │ __init__                     1L  0C    0m  CC=0.0    ←0
+  │
+  examples/                       CC̄=0.0    ←in:0  →out:0
+  │ prompts-multilang.txt      229L  0C    0m  CC=0.0    ←0
+  │ e2e.sh                      80L  0C    1m  CC=0.0    ←0
+  │ prompts-multilang.log.txt    63L  0C    0m  CC=0.0    ←0
+  │ e2e.sh                      60L  0C    1m  CC=0.0    ←0
+  │ e2e.sh                      58L  0C    1m  CC=0.0    ←0
+  │ e2e.sh                      55L  0C    1m  CC=0.0    ←0
+  │ run-e2e.sh                  39L  0C    0m  CC=0.0    ←0
+  │ e2e.sh                      31L  0C    0m  CC=0.0    ←0
+  │ e2e-multilang.sh            28L  0C    0m  CC=0.0    ←0
+  │ mcp-config.cursor.json      11L  0C    0m  CC=0.0    ←0
+  │ docker-compose.yml           7L  0C    0m  CC=0.0    ←0
+  │ docker-compose.yml           7L  0C    0m  CC=0.0    ←0
+  │ docker-compose.yml           7L  0C    0m  CC=0.0    ←0
+  │ docker-compose.yml           7L  0C    0m  CC=0.0    ←0
+  │ docker-compose.yml           7L  0C    0m  CC=0.0    ←0
+  │ prompts.env                  2L  0C    0m  CC=0.0    ←0
+  │
+  scripts/                        CC̄=0.0    ←in:0  →out:0
+  │ test-mcp-live.sh            67L  0C    1m  CC=0.0    ←0
+  │
+  ./                              CC̄=0.0    ←in:0  →out:0
+  │ !! goal.yaml                  512L  0C    0m  CC=0.0    ←0
+  │ pyproject.toml              59L  0C    0m  CC=0.0    ←0
+  │ project.sh                  59L  0C    0m  CC=0.0    ←0
+  │ Makefile                    42L  0C    0m  CC=0.0    ←0
+  │ tree.sh                      1L  0C    0m  CC=0.0    ←0
+  │
+
+COUPLING:
+                       src.nlp2env  src.nlp2env_mcp
+      src.nlp2env               ──              ←10  hub
+  src.nlp2env_mcp               10               ──  !! fan-out
+  CYCLES: none
+  HUB: src.nlp2env/ (fan-in=10)
+  SMELL: src.nlp2env_mcp/ fan-out=10 → split needed
+
+EXTERNAL:
+  validation: run `vallm batch .` → validation.toon
+  duplication: run `redup scan .` → duplication.toon

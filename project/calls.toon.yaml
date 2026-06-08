@@ -1,0 +1,33 @@
+# code2llm call graph | /home/tom/github/semcod/nlp2env
+# generated in 0.00s
+# nodes: 6 | edges: 3 | modules: 2
+# CC̄=2.8
+
+HUBS[20]:
+  src.nlp2env_mcp.server.build_mcp
+    CC=2  in:1  out:95  total:96
+  src.nlp2env.env_file.resolve_env_path
+    CC=4  in:2  out:14  total:16
+  src.nlp2env.env_file.EnvFile.load
+    CC=10  in:0  out:15  total:15
+  src.nlp2env.env_file.mask_value
+    CC=4  in:7  out:2  total:9
+  src.nlp2env.env_file.EnvFile.list_masked
+    CC=2  in:0  out:3  total:3
+  src.nlp2env_mcp.server.main
+    CC=1  in:0  out:2  total:2
+
+MODULES:
+  src.nlp2env.env_file  [4 funcs]
+    list_masked  CC=2  out:3
+    load  CC=10  out:15
+    mask_value  CC=4  out:2
+    resolve_env_path  CC=4  out:14
+  src.nlp2env_mcp.server  [2 funcs]
+    build_mcp  CC=2  out:95
+    main  CC=1  out:2
+
+EDGES:
+  src.nlp2env_mcp.server.main → src.nlp2env_mcp.server.build_mcp
+  src.nlp2env.env_file.EnvFile.load → src.nlp2env.env_file.resolve_env_path
+  src.nlp2env.env_file.EnvFile.list_masked → src.nlp2env.env_file.mask_value

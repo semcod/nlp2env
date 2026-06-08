@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# NL prompt → nlp2env_set_email → verify .env (symuluje agenta Cursor/todomat)
+# NL prompts from smtp-email.testql.toon.yaml → MCP → verify .env → append prompts.log.txt
 set -euo pipefail
 
 _SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -10,7 +10,6 @@ else
 fi
 # shellcheck source=examples/lib/common.sh
 source "$ROOT/examples/lib/common.sh"
-PYTHON="$(resolve_python "$ROOT")"
 EXAMPLE="$_SCRIPT_DIR"
 EXAMPLE_NAME="$(basename "$EXAMPLE")"
 if [[ -n "${NLP2ENV_ROOT:-}" ]]; then
@@ -18,57 +17,16 @@ if [[ -n "${NLP2ENV_ROOT:-}" ]]; then
 else
   WORKDIR="${WORKDIR:-$EXAMPLE/workdir}"
 fi
-ENV_FILE="$WORKDIR/.env"
 
+export SMTP_PASSWORD="${SMTP_PASSWORD:-e2e-test-secret-42}"
+export NLP2ENV_EXAMPLE_DIR="$EXAMPLE"
+export NLP2ENV_PROMPTS_FILE="${NLP2ENV_PROMPTS_FILE:-smtp-email-inline.testql.toon.yaml}"
+export NLP2ENV_WORKDIR="$WORKDIR"
+
+echo "Cleaning up workdir: $WORKDIR"
 rm -rf "$WORKDIR"
-mkdir -p "$WORKDIR"
-cp "$EXAMPLE/.env.example" "$ENV_FILE"
-
-set -a
-# shellcheck source=/dev/null
-source "$EXAMPLE/prompts.env"
-set +a
-export NLP2ENV_ENV_FILE="$ENV_FILE"
 
 cd "$ROOT"
-export PATH="${ROOT}/.venv/bin:${ROOT}/venv/bin:/usr/local/bin:${PATH}"
-export PYTHONPATH="$ROOT/examples/lib:${PYTHONPATH:-}"
+setup_example_env "$ROOT"
 
-"$PYTHON" - <<'PY'
-import os
-from pathlib import Path
-
-from run_mcp import assert_ok, mcp_call
-
-env_file = os.environ["NLP2ENV_ENV_FILE"]
-
-out = assert_ok(
-    mcp_call(
-        "nlp2env_set_email",
-        {
-            "host": "smtp.gmail.com",
-            "user": "jan@firma.pl",
-            "password_env": "SMTP_PASSWORD",
-            "port": "587",
-            "from_addr": "jan@firma.pl",
-        },
-        env_file=env_file,
-    ),
-    "set_email",
-)
-assert out["email_status"]["configured"] is True
-
-status = assert_ok(mcp_call("nlp2env_email_status", env_file=env_file), "email_status")
-assert status["email_status"]["configured"] is True
-
-text = Path(env_file).read_text(encoding="utf-8")
-for needle in (
-    "SMTP_HOST=smtp.gmail.com",
-    "SMTP_USER=jan@firma.pl",
-    "SMTP_PORT=587",
-    "SMTP_PASSWORD=e2e-test-secret-42",
-):
-    assert needle in text, f"missing {needle!r} in:\n{text}"
-
-print("examples/write/smtp-email: OK")
-PY
+exec "$PYTHON" "$ROOT/examples/lib/run_smtp_prompts.py"

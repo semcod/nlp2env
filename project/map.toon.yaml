@@ -1,0 +1,109 @@
+# nlp2env | 26f 1742L | python:15,shell:10,less:1 | 2026-06-08
+# stats: 43 func | 6 cls | 26 mod | CC̄=4.1 | critical:4 | cycles:0
+# alerts[5]: CC scenarios_from_toon=14; CC resolve_prompt_to_env_uri=14; CC _materialize_nlp2env=12; CC parse_testtoon=11; CC _split_row=7
+# hotspots[5]: build_mcp fan=32; parse_testtoon fan=15; resolve_prompt_to_env_uri fan=14; _materialize_file fan=13; _materialize_getv fan=11
+# evolution: baseline
+# Keys: M=modules, D=details, i=imports, e=exports, c=classes, f=functions, m=methods
+M[26]:
+  app.doql.less,69
+  examples/integrators/mcp-stdio/e2e.sh,61
+  examples/integrators/todomat-dispatch/e2e.sh,81
+  examples/run-e2e.sh,40
+  examples/write/apply-text/e2e.sh,59
+  examples/write/custom-keys/e2e.sh,56
+  examples/write/smtp-email/e2e-multilang.sh,29
+  examples/write/smtp-email/e2e.sh,32
+  project.sh,59
+  scripts/test-mcp-live.sh,68
+  src/nlp2env/__init__.py,14
+  src/nlp2env/env_file.py,127
+  src/nlp2env/profiles.py,66
+  src/nlp2env/toon_scenarios.py,204
+  src/nlp2env_mcp/__init__.py,2
+  src/nlp2env_mcp/__main__.py,7
+  src/nlp2env_mcp/server.py,244
+  src/uri2env/__init__.py,27
+  src/uri2env/cli.py,30
+  src/uri2env/compile.py,31
+  src/uri2env/materialize.py,162
+  src/uri2env/resolve.py,79
+  src/uri2env/uri.py,89
+  tests/test_env_file.py,47
+  tests/test_mcp_tools.py,57
+  tree.sh,2
+D:
+  src/nlp2env/__init__.py:
+  src/nlp2env/env_file.py:
+    e: mask_value,resolve_env_path,EnvFile
+    EnvFile: load(2),get(2),set_many(1),delete(1),list_masked(0),backup(1),save(0),apply_text(1)
+    mask_value(key;value)
+    resolve_env_path(path)
+  src/nlp2env/profiles.py:
+    e: email_profile_from_dict,email_profile_status
+    email_profile_from_dict(data)
+    email_profile_status(values)
+  src/nlp2env/toon_scenarios.py:
+    e: _strip_quoted,_detect_sep,_split_row,_parse_value,parse_testtoon,scenarios_from_toon,load_scenarios,ToonSection,ToonScript,PromptScenario
+    ToonSection:
+    ToonScript:
+    PromptScenario: nl(0),source(0),tool(0),after(0),assert_configured(0),inline_arguments(0)
+    _strip_quoted(line)
+    _detect_sep(line)
+    _split_row(line;sep)
+    _parse_value(raw)
+    parse_testtoon(text)
+    scenarios_from_toon(script)
+    load_scenarios(path)
+  src/nlp2env_mcp/__init__.py:
+  src/nlp2env_mcp/__main__.py:
+  src/nlp2env_mcp/server.py:
+    e: _ok,_err,_load,build_mcp,main
+    _ok(payload)
+    _err(message)
+    _load(path)
+    build_mcp()
+    main()
+  src/uri2env/__init__.py:
+  src/uri2env/cli.py:
+    e: main
+    main(argv)
+  src/uri2env/compile.py:
+    e: compile_env_uri
+    compile_env_uri(uri;host)
+  src/uri2env/materialize.py:
+    e: _resolve_dest,_load_getv_profile,_materialize_getv,_materialize_file,_materialize_nlp2env,materialize_uri,MaterializeResult
+    MaterializeResult: to_dict(0)
+    _resolve_dest(params;fallback)
+    _load_getv_profile(category;profile)
+    _materialize_getv(parts;dest)
+    _materialize_file(parts;dest)
+    _materialize_nlp2env(parts;dest;params)
+    materialize_uri(uri)
+  src/uri2env/resolve.py:
+    e: resolve_prompt_to_env_uri,ResolvedEnvUri
+    ResolvedEnvUri: to_dict(0)
+    resolve_prompt_to_env_uri(prompt)
+  src/uri2env/uri.py:
+    e: _encode,_decode,uri_for_getv_profile,uri_for_getv_var,uri_for_env_file,uri_for_nlp2env_profile,is_env_uri,parse_env_uri,build_env_uri_index
+    _encode(value)
+    _decode(value)
+    uri_for_getv_profile(category;profile)
+    uri_for_getv_var(category;profile;var_name)
+    uri_for_env_file(path)
+    uri_for_nlp2env_profile(profile)
+    is_env_uri(uri)
+    parse_env_uri(uri)
+    build_env_uri_index()
+  tests/test_env_file.py:
+    e: test_mask_secret,test_load_and_save_roundtrip,test_apply_text,test_email_profile,test_email_profile_missing
+    test_mask_secret()
+    test_load_and_save_roundtrip(tmp_path)
+    test_apply_text(tmp_path)
+    test_email_profile()
+    test_email_profile_missing()
+  tests/test_mcp_tools.py:
+    e: env_path,test_interfaces,test_set_email_via_tool,test_delete_via_tool
+    env_path(tmp_path;monkeypatch)
+    test_interfaces()
+    test_set_email_via_tool(env_path)
+    test_delete_via_tool(env_path)

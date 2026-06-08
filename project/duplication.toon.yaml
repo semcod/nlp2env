@@ -1,0 +1,9 @@
+# redup/duplication | 0 groups | 5f 328L | 2026-06-08
+
+SUMMARY:
+  files_scanned: 5
+  total_lines:   328
+  dup_groups:    0
+  dup_fragments: 0
+  saved_lines:   0
+  scan_ms:       3575

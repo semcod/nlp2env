@@ -1,0 +1,40 @@
+# SCENARIO: smtp-email-inline
+# TYPE: nlp2env
+# VERSION: 1.0
+# SOURCE: prompts.txt.bak
+
+CONFIG[1]{key, value}:
+  password_env, SMTP_PASSWORD
+
+PROMPTS[5]{id, lang, source, nl, tool, after, assert_configured}:
+gmail-basic, -, inline, "Ustaw skrzynkę SMTP: host smtp.gmail.com, użytkownik jan@firma.pl, port 587", nlp2env_set_email, -, false
+office365, -, inline, "Skonfiguruj SMTP Office365: smtp.office365.com, ana@corp.pl, port 587", nlp2env_set_email, -, false
+status-check, -, inline, Czy skrzynka SMTP jest poprawnie skonfigurowana?, nlp2env_email_status, office365, true
+list-keys, -, inline, Pokaż co jest zapisane w pliku .env, nlp2env_list, office365, false
+gmail-nl-llm, -, llm, "Ustaw pocztę wychodzącą Gmail: serwer smtp.gmail.com, użytkownik jan@firma.pl, port 587", -, -, false
+
+PROMPT_FIELDS[10]{prompt_id, key, value}:
+  gmail-basic, host, smtp.gmail.com
+  gmail-basic, user, jan@firma.pl
+  gmail-basic, port, 587
+  gmail-basic, from_addr, jan@firma.pl
+  gmail-basic, password_env, SMTP_PASSWORD
+  office365, host, smtp.office365.com
+  office365, user, ana@corp.pl
+  office365, port, 587
+  office365, from_addr, ana@corp.pl
+  office365, password_env, SMTP_PASSWORD
+
+ASSERT_ENV[12]{prompt_id, expect}:
+  gmail-basic, SMTP_HOST=smtp.gmail.com
+  gmail-basic, SMTP_USER=jan@firma.pl
+  gmail-basic, SMTP_PORT=587
+  gmail-basic, SMTP_PASSWORD=e2e-test-secret-42
+  office365, SMTP_HOST=smtp.office365.com
+  office365, SMTP_USER=ana@corp.pl
+  office365, SMTP_PORT=587
+  status-check, SMTP_HOST=smtp.office365.com
+  list-keys, SMTP_USER=ana@corp.pl
+  gmail-nl-llm, SMTP_HOST=smtp.gmail.com
+  gmail-nl-llm, SMTP_USER=jan@firma.pl
+  gmail-nl-llm, SMTP_PORT=587

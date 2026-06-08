@@ -1,0 +1,115 @@
+# SCENARIO: smtp-email-multilang
+# TYPE: nlp2env
+# VERSION: 1.0
+# SOURCE: prompts-multilang.txt
+
+CONFIG[1]{key, value}:
+  password_env, SMTP_PASSWORD
+
+PROMPTS[26]{id, lang, source, nl, tool, after, assert_configured}:
+pl-gmail, pl, llm, "Ustaw skrzynkę SMTP Gmail: serwer smtp.gmail.com, użytkownik jan@firma.pl, port 587", -, -, false
+en-outlook, en, llm, "Configure outgoing mail: SMTP host smtp-mail.outlook.com, user john@company.com, port 587", -, -, false
+de-gmx, de, llm, "Bitte SMTP einrichten: Host mail.gmx.net, Benutzer max@muster.de, Port 587", -, -, false
+fr-orange, fr, llm, "Configurez la messagerie SMTP : hôte smtp.orange.fr, utilisateur pierre@firma.fr, port 587", -, -, false
+es-gmail, es, llm, "Configura el correo saliente SMTP: servidor smtp.gmail.com, usuario ana@empresa.es, puerto 587", -, -, false
+it-aruba, it, llm, "Imposta SMTP: host smtps.aruba.it, utente mario@azienda.it, porta 587", -, -, false
+pt-sapo, pt, llm, "Configure o SMTP de envio: servidor smtp.sapo.pt, utilizador joao@empresa.pt, porta 587", -, -, false
+cs-seznam, cs, llm, "Nastav odchozí SMTP: server smtp.seznam.cz, uživatel jan@firma.cz, port 587", -, -, false
+uk-ukrnet, uk, llm, "Налаштуй SMTP: хост smtp.ukr.net, користувач ivan@firma.ua, порт 587", -, -, false
+nl-ziggo, nl, llm, "Stel uitgaande SMTP in: host smtp.ziggo.nl, gebruiker pieter@bedrijf.nl, poort 587", -, -, false
+sv-gmail, sv, llm, "Konfigurera utgående e-post SMTP: värd smtp.gmail.com, användare erik@foretag.se, port 587", -, -, false
+tr-gmail, tr, llm, "Giden SMTP yapılandır: sunucu smtp.gmail.com, kullanıcı ahmet@sirket.tr, port 587", -, -, false
+pl-interia, pl, llm, "Skonfiguruj pocztę Interia: host poczta.interia.pl, login anna@interia.pl, port 587", -, -, false
+en-yahoo, en, llm, "Set up Yahoo SMTP mailbox: host smtp.mail.yahoo.com, account alice@yahoo.com, port 587. Use SMTP_PASSWORD for password_env.", -, -, false
+de-ionos, de, llm, "Richte SMTP ein für Ionos: Server smtp.ionos.de, E-Mail hans@firma.de, Port 587", -, -, false
+fr-free, fr, llm, "Paramètre SMTP Free : serveur smtp.free.fr, compte jean@free.fr, port 587", -, -, false
+es-office365, es, llm, "Configura Office365 SMTP: host smtp.office365.com, usuario carlos@empresa.es, puerto 587", -, -, false
+it-gmail, it, llm, "Configura casella SMTP Gmail: server smtp.gmail.com, email lucia@impresa.it, porta 587", -, -, false
+pl-op, pl, llm, "Ustaw SMTP Orange: smtp.op.pl, użytkownik tomek@op.pl, port 587", -, -, false
+en-sendgrid, en, llm, "Configure SendGrid SMTP relay: host smtp.sendgrid.net, user api@project.io, port 587. Use SMTP_PASSWORD for password_env.", -, -, false
+de-webde, de, llm, "SMTP für WEB.DE: Host smtp.web.de, Nutzer lisa@web.de, Port 587", -, -, false
+ja-gmail, ja, llm, GmailのSMTPを設定してください。ホスト smtp.gmail.com、ユーザー tanaka@kaisha.jp、ポート 587, -, -, false
+zh-qq, zh, llm, 请配置SMTP发件邮箱：服务器 smtp.qq.com，用户 user@qq.com，端口 587, -, -, false
+ar-gmail, ar, llm, قم بإعداد SMTP: المضيف smtp.gmail.com، المستخدم ahmed@company.ae، المنفذ 587, -, -, false
+ro-gmail, ro, llm, "Configurează SMTP: gazdă smtp.gmail.com, utilizator ion@firma.ro, port 587", -, -, false
+hu-gmail, hu, llm, "Állítsd be az SMTP-t: kiszolgáló smtp.gmail.com, felhasználó zoltan@ceg.hu, port 587", -, -, false
+
+ASSERT_ENV[78]{prompt_id, expect}:
+  pl-gmail, SMTP_HOST=smtp.gmail.com
+  pl-gmail, SMTP_USER=jan@firma.pl
+  pl-gmail, SMTP_PORT=587
+  en-outlook, SMTP_HOST=smtp-mail.outlook.com
+  en-outlook, SMTP_USER=john@company.com
+  en-outlook, SMTP_PORT=587
+  de-gmx, SMTP_HOST=mail.gmx.net
+  de-gmx, SMTP_USER=max@muster.de
+  de-gmx, SMTP_PORT=587
+  fr-orange, SMTP_HOST=smtp.orange.fr
+  fr-orange, SMTP_USER=pierre@firma.fr
+  fr-orange, SMTP_PORT=587
+  es-gmail, SMTP_HOST=smtp.gmail.com
+  es-gmail, SMTP_USER=ana@empresa.es
+  es-gmail, SMTP_PORT=587
+  it-aruba, SMTP_HOST=smtps.aruba.it
+  it-aruba, SMTP_USER=mario@azienda.it
+  it-aruba, SMTP_PORT=587
+  pt-sapo, SMTP_HOST=smtp.sapo.pt
+  pt-sapo, SMTP_USER=joao@empresa.pt
+  pt-sapo, SMTP_PORT=587
+  cs-seznam, SMTP_HOST=smtp.seznam.cz
+  cs-seznam, SMTP_USER=jan@firma.cz
+  cs-seznam, SMTP_PORT=587
+  uk-ukrnet, SMTP_HOST=smtp.ukr.net
+  uk-ukrnet, SMTP_USER=ivan@firma.ua
+  uk-ukrnet, SMTP_PORT=587
+  nl-ziggo, SMTP_HOST=smtp.ziggo.nl
+  nl-ziggo, SMTP_USER=pieter@bedrijf.nl
+  nl-ziggo, SMTP_PORT=587
+  sv-gmail, SMTP_HOST=smtp.gmail.com
+  sv-gmail, SMTP_USER=erik@foretag.se
+  sv-gmail, SMTP_PORT=587
+  tr-gmail, SMTP_HOST=smtp.gmail.com
+  tr-gmail, SMTP_USER=ahmet@sirket.tr
+  tr-gmail, SMTP_PORT=587
+  pl-interia, SMTP_HOST=poczta.interia.pl
+  pl-interia, SMTP_USER=anna@interia.pl
+  pl-interia, SMTP_PORT=587
+  en-yahoo, SMTP_HOST=smtp.mail.yahoo.com
+  en-yahoo, SMTP_USER=alice@yahoo.com
+  en-yahoo, SMTP_PORT=587
+  de-ionos, SMTP_HOST=smtp.ionos.de
+  de-ionos, SMTP_USER=hans@firma.de
+  de-ionos, SMTP_PORT=587
+  fr-free, SMTP_HOST=smtp.free.fr
+  fr-free, SMTP_USER=jean@free.fr
+  fr-free, SMTP_PORT=587
+  es-office365, SMTP_HOST=smtp.office365.com
+  es-office365, SMTP_USER=carlos@empresa.es
+  es-office365, SMTP_PORT=587
+  it-gmail, SMTP_HOST=smtp.gmail.com
+  it-gmail, SMTP_USER=lucia@impresa.it
+  it-gmail, SMTP_PORT=587
+  pl-op, SMTP_HOST=smtp.op.pl
+  pl-op, SMTP_USER=tomek@op.pl
+  pl-op, SMTP_PORT=587
+  en-sendgrid, SMTP_HOST=smtp.sendgrid.net
+  en-sendgrid, SMTP_USER=api@project.io
+  en-sendgrid, SMTP_PORT=587
+  de-webde, SMTP_HOST=smtp.web.de
+  de-webde, SMTP_USER=lisa@web.de
+  de-webde, SMTP_PORT=587
+  ja-gmail, SMTP_HOST=smtp.gmail.com
+  ja-gmail, SMTP_USER=tanaka@kaisha.jp
+  ja-gmail, SMTP_PORT=587
+  zh-qq, SMTP_HOST=smtp.qq.com
+  zh-qq, SMTP_USER=user@qq.com
+  zh-qq, SMTP_PORT=587
+  ar-gmail, SMTP_HOST=smtp.gmail.com
+  ar-gmail, SMTP_USER=ahmed@company.ae
+  ar-gmail, SMTP_PORT=587
+  ro-gmail, SMTP_HOST=smtp.gmail.com
+  ro-gmail, SMTP_USER=ion@firma.ro
+  ro-gmail, SMTP_PORT=587
+  hu-gmail, SMTP_HOST=smtp.gmail.com
+  hu-gmail, SMTP_USER=zoltan@ceg.hu
+  hu-gmail, SMTP_PORT=587

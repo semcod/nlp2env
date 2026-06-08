@@ -1,0 +1,75 @@
+// LESS format — define @variables here as needed
+
+app {
+  name: nlp2env;
+  version: 0.1.2;
+  description: "MCP server for reading and writing .env variables (email/SMTP and custom keys)";
+  license: Apache-2.0;
+}
+
+dependencies {
+  dev: "pytest>=8.0, mcp>=1.0, goal>=2.1.0, costs>=0.1.20, pfix>=0.1.60";
+}
+
+interface[type="cli"] {
+  framework: argparse;
+}
+interface[type="cli"] page[name="nlp2env-mcp"] {
+
+}
+
+workflow[name="venv"] {
+  trigger: manual;
+  step-1: run cmd=test -x "$(PIP)" || $(PYTHON) -m venv "$(VENV)";
+}
+
+workflow[name="install"] {
+  trigger: manual;
+  step-1: run cmd=$(PIP) install -e .;
+}
+
+workflow[name="install-mcp"] {
+  trigger: manual;
+  step-1: run cmd=$(PIP) install -e ".[mcp]";
+}
+
+workflow[name="test"] {
+  trigger: manual;
+  step-1: run cmd=$(PYTEST) tests/ -v;
+}
+
+workflow[name="test-mcp-live"] {
+  trigger: manual;
+  step-1: run cmd=./scripts/test-mcp-live.sh;
+}
+
+workflow[name="examples"] {
+  trigger: manual;
+  step-1: run cmd=./examples/run-e2e.sh;
+}
+
+workflow[name="examples-multilang"] {
+  trigger: manual;
+  step-1: run cmd=export SMTP_PASSWORD="$${SMTP_PASSWORD:-e2e-test-secret-42}"; \;
+  step-2: run cmd=bash examples/write/smtp-email/e2e-multilang.sh;
+}
+
+workflow[name="examples-all"] {
+  trigger: manual;
+  step-1: run cmd=echo "ALL EXAMPLES + MULTILANG OK";
+}
+
+deploy {
+  target: makefile;
+}
+
+environment[name="local"] {
+  runtime: docker-compose;
+  env_file: .env;
+  python_version: >=3.10;
+}
+
+environment[name="ollama"] {
+  runtime: docker-compose;
+  env_file: .env.ollama;
+}

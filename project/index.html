@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<!-- generated in 0.00s -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>code2llm Analysis Results</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/yaml.min.js"></script>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --surface-hover: #334155;
+            --border: #475569;
+            --text: #e2e8f0;
+            --text-muted: #94a3b8;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --success: #22c55e;
+            --warning: #eab308;
+            --error: #ef4444;
+        }
+
+        @media (prefers-color-scheme: light) {
+            :root {
+                --bg: #f8fafc;
+                --surface: #ffffff;
+                --surface-hover: #f1f5f9;
+                --border: #e2e8f0;
+                --text: #1e293b;
+                --text-muted: #64748b;
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            padding: 1.25rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header h1 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        .search {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .search input {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 0.375rem;
+            color: var(--text);
+            font-size: 0.875rem;
+            outline: none;
+        }
+
+        .search input:focus {
+            border-color: var(--accent);
+        }
+
+        .search input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .file-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0.5rem;
+        }
+
+        .file-group {
+            margin-bottom: 1rem;
+        }
+
+        .file-group-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            padding: 0.5rem 0.75rem;
+            font-weight: 600;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.625rem 0.75rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            margin-bottom: 0.125rem;
+        }
+
+        .file-item:hover {
+            background: var(--surface-hover);
+        }
+
+        .file-item.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        .file-item.active .file-meta {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .file-icon {
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .file-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .file-name {
+            font-size: 0.875rem;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .file-meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .file-size {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+
+        /* Content */
+        .content {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .content-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            background: var(--surface);
+        }
+
+        .content-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .content-title h2 {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .content-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.5rem 1rem;
+            background: var(--surface-hover);
+            color: var(--text);
+            text-decoration: none;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.15s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: var(--border);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        .content-body {
+            flex: 1;
+            overflow: auto;
+            padding: 1.5rem;
+        }
+
+        /* Welcome */
+        .welcome {
+            max-width: 800px;
+        }
+
+        .welcome h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .welcome p {
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        /* Content Display */
+        pre {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            overflow-x: auto;
+            font-family: 'Fira Code', 'Monaco', 'Consolas', monospace;
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+
+        code {
+            font-family: 'Fira Code', 'Monaco', 'Consolas', monospace;
+        }
+
+        .markdown-content {
+            line-height: 1.7;
+        }
+
+        .markdown-content h1,
+        .markdown-content h2,
+        .markdown-content h3 {
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .markdown-content h1 {
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
+
+        .markdown-content p {
+            margin-bottom: 1rem;
+        }
+
+        .markdown-content code {
+            background: var(--surface);
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.25rem;
+            font-size: 0.875em;
+        }
+
+        .markdown-content pre code {
+            background: transparent;
+            padding: 0;
+        }
+
+        .markdown-content ul,
+        .markdown-content ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .markdown-content li {
+            margin-bottom: 0.25rem;
+        }
+
+        .markdown-content blockquote {
+            border-left: 4px solid var(--accent);
+            padding-left: 1rem;
+            margin-left: 0;
+            color: var(--text-muted);
+        }
+
+        .markdown-content table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        .markdown-content th,
+        .markdown-content td {
+            border: 1px solid var(--border);
+            padding: 0.5rem;
+            text-align: left;
+        }
+
+        .markdown-content th {
+            background: var(--surface);
+        }
+
+        .markdown-content img {
+            max-width: 100%;
+            border-radius: 0.5rem;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-muted);
+        }
+
+        /* Mermaid */
+        .mermaid-content {
+            background: var(--surface);
+            border-radius: 0.5rem;
+            padding: 1rem;
+        }
+
+        .mermaid-content pre {
+            background: transparent;
+            border: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* Image Preview */
+        .image-preview {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            background: var(--surface);
+            border-radius: 0.5rem;
+            padding: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .sidebar.open {
+                display: flex;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 100;
+            }
+
+            .file-size {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="header">
+                <h1>🔍 code2llm</h1>
+                <p>Analysis Results Browser</p>
+            </div>
+            <div class="search">
+                <input type="text" id="search" placeholder="Search files..." oninput="filterFiles(this.value)">
+            </div>
+            <div class="file-list" id="fileList">
+                <!-- Files will be rendered here -->
+            </div>
+        </aside>
+
+        <main class="content">
+            <div class="content-header">
+                <div class="content-title">
+                    <span id="contentIcon">📁</span>
+                    <h2 id="contentTitle">Welcome</h2>
+                </div>
+                <div class="content-actions" id="contentActions">
+                    <!-- Actions will be rendered here -->
+                </div>
+            </div>
+            <div class="content-body" id="contentBody">
+                <div class="welcome">
+                    <h2>Analysis Results</h2>
+                    <p>Select a file from the sidebar to view its contents. This interface works on GitHub Pages without any server required.</p>  # noqa: E501
+                    <div class="stats-grid" id="statsGrid">
+                        <!-- Stats will be rendered here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Initialize mermaid
+        mermaid.initialize({ startOnLoad: false, theme: 'dark' });
+
+        const files = [{"name": "calls.png", "rel_path": "calls.png", "path": "calls.png", "size": "13.2KB", "icon": "🖼️", "type": "image", "type_name": "Image", "content": "[Binary file]", "is_subdir": false}, {"name": "compact_flow.png", "rel_path": "compact_flow.png", "path": "compact_flow.png", "size": "5.9KB", "icon": "🖼️", "type": "image", "type_name": "Image", "content": "[Binary file]", "is_subdir": false}, {"name": "flow.png", "rel_path": "flow.png", "path": "flow.png", "size": "13.0KB", "icon": "🖼️", "type": "image", "type_name": "Image", "content": "[Binary file]", "is_subdir": false}, {"name": "README.md", "rel_path": "README.md", "path": "README.md", "size": "9.4KB", "icon": "📝", "type": "markdown", "type_name": "Markdown", "content": "# code2llm - Generated Analysis Files\n<!-- generated in 0.00s -->\n\nThis directory contains the complete analysis of your project generated by `code2llm`. Each file serves a specific purpose for understanding, refactoring, and documenting your codebase.  # noqa: E501\n\n## 📁 Generated Files Overview\n\nWhen you run `code2llm ./ -f all`, the following files are created:\n\n### 🎯 Core Analysis Files\n\n| File | Format | Purpose | Key Insights |\n|------|--------|---------|--------------|\n| `evolution.toon.yaml` | **YAML** | **📋 Refactoring queue** - Prioritized improvements | 0 refactoring actions needed |\n| `map.toon.yaml` | **YAML** | **🗺️ Structural map + project header** - Modules, imports, exports, signatures, stats, alerts, hotspots, trend | Project architecture overview |\n\n### 🤖 LLM-Ready Documentation\n\n| File | Format | Purpose | Use Case |\n|------|--------|---------|----------|\n| `prompt.txt` | **Text** | **📝 Ready-to-send prompt** - Lists all files with instructions | Attach to LLM conversation as context guide |\n| `context.md` | **Markdown** | **📖 LLM narrative** - Architecture summary | Paste into ChatGPT/Claude for code analysis |\n\n### 📊 Visualizations\n\n| File | Format | Purpose | Description |\n|------|--------|---------|-------------|\n| `flow.mmd` | **Mermaid** | **🔄 Control flow diagram** | Function call paths with complexity styling |\n| `calls.mmd` | **Mermaid** | **📞 Call graph** | Function dependencies (edges only) |\n| `compact_flow.mmd` | **Mermaid** | **📦 Module overview** | Aggregated module-level view |\n\n## 🚀 Quick Start Commands\n\n### Basic Analysis\n```bash\n# Quick health check (TOON format only)\ncode2llm ./ -f toon\n\n# Generate all formats (what created these files)\ncode2llm ./ -f all\n\n# LLM-ready context only\ncode2llm ./ -f context\n```\n\n### Performance Options\n```bash\n# Fast analysis for large projects\ncode2llm ./ -f toon --strategy quick\n\n# Memory-limited analysis\ncode2llm ./ -f all --max-memory 500\n\n# Skip PNG generation (faster)\ncode2llm ./ -f all --no-png\n```\n\n### Refactoring Focus\n```bash\n# Get refactoring recommendations\ncode2llm ./ -f evolution\n\n# Focus on specific code smells\ncode2llm ./ -f toon --refactor --smell god_function\n\n# Data flow analysis\ncode2llm ./ -f flow --data-flow\n```\n\n## 📖 Understanding Each File\n\n### `analysis.toon` - Health Diagnostics\n**Purpose**: Quick overview of code health issues\n**Key sections**:\n- **HEALTH**: Critical issues (🔴) and warnings (🟡)\n- **REFACTOR**: Prioritized refactoring actions\n- **COUPLING**: Module dependencies and potential cycles\n- **LAYERS**: Package complexity metrics\n- **FUNCTIONS**: High-complexity functions (CC ≥ 10)\n- **CLASSES**: Complex classes needing attention\n\n**Example usage**:\n```bash\n# View health issues\ncat analysis.toon | head -30\n\n# Check refactoring priorities\ngrep \"REFACTOR\" analysis.toon\n```\n\n### `evolution.toon.yaml` - Refactoring Queue\n**Purpose**: Step-by-step refactoring plan\n**Key sections**:\n- **NEXT**: Immediate actions to take\n- **RISKS**: Potential breaking changes\n- **METRICS-TARGET**: Success criteria\n\n**Example usage**:\n```bash\n# Get refactoring plan\ncat evolution.toon.yaml\n\n# Track progress\ngrep \"NEXT\" evolution.toon.yaml\n```\n\n### `flow.toon` - Legacy Data Flow Analysis\n**Purpose**: Understand data movement through the system (legacy / explicit opt-in)\n**Key sections**:\n- **PIPELINES**: Data processing chains\n- **CONTRACTS**: Function input/output contracts\n- **SIDE_EFFECTS**: Functions with external impacts\n\n**Example usage**:\n```bash\n# Find data pipelines\ngrep \"PIPELINES\" flow.toon\n\n# Identify side effects\ngrep \"SIDE_EFFECTS\" flow.toon\n```\n\n### `map.toon.yaml` - Structural Map + Project Header\n**Purpose**: High-level architecture overview plus compact project header\n**Key sections**:\n- **MODULES**: All modules with basic stats\n- **IMPORTS**: Dependency relationships\n- **EXPORTS**: Public API surface and signatures\n- **HEADER**: Stats, alerts, hotspots, evolution trend\n\n**Example usage**:\n```bash\n# See project structure\ncat map.toon.yaml | head -50\n\n# Find public APIs\ngrep \"SIGNATURES\" map.toon.yaml\n```\n\n### `project.toon.yaml` - Compact Analysis View\n**Purpose**: Compact module view generated from project.yaml data\n**Status**: Legacy view generated on demand from unified project.yaml\n\n**Example usage**:\n```bash\n# View compact project structure\ncat project.toon.yaml | head -30\n\n# Find largest files\ngrep -E \"^  .*[0-9]{3,}$\" project.toon.yaml | sort -t',' -k2 -n -r | head -10\n```\n\n### `prompt.txt` - Ready-to-Send LLM Prompt\n**Purpose**: Pre-formatted prompt listing all generated files for LLM conversation\n**Generation**: Written when `code2llm` runs with a source path and requests `-f all` (including `--no-chunk`) or `code2logic`  # noqa: E501\n**Contents**:\n- **Files section**: Lists all existing generated files with descriptions, including `project.toon.yaml` when generated by `-f all`  # noqa: E501\n- **Source files section**: Highlights important source files such as `cli_exports/orchestrator.py`\n- **Missing section**: Shows which files weren't generated (if any)\n- **Task section**: Refactoring brief with concrete execution instructions, not just analysis\n- **Priority Order section**: State-dependent refactoring priorities, starting with blockers and then architecture cleanup  # noqa: E501\n- **Requirements section**: Guidelines for suggested changes\n\n**Example usage**:\n```bash\n# View the prompt\ncat prompt.txt\n\n# Copy to clipboard and paste into ChatGPT/Claude\ncat prompt.txt | pbcopy  # macOS\ncat prompt.txt | xclip -sel clip  # Linux\n```\n\n### `context.md` - LLM Narrative\n**Purpose**: Ready-to-paste context for AI assistants\n**Key sections**:\n- **Overview**: Project statistics\n- **Architecture**: Module breakdown\n- **Entry Points**: Public interfaces\n- **Patterns**: Design patterns detected\n\n**Example usage**:\n```bash\n# Copy to clipboard for LLM\ncat context.md | pbcopy  # macOS\ncat context.md | xclip -sel clip  # Linux\n\n# Use with Claude/ChatGPT for code analysis\n```\n\n### Visualization Files (`*.mmd`, `*.png`)\n**Purpose**: Visual understanding of code structure\n**Files**:\n- `flow.mmd` - Detailed control flow with complexity colors\n- `calls.mmd` - Simple call graph\n- `compact_flow.mmd` - High-level module view\n- `*.png` - Pre-rendered images\n\n**Example usage**:\n```bash\n# View diagrams\nopen flow.png  # macOS\nxdg-open flow.png  # Linux\n\n# Edit in Mermaid Live Editor\n# Copy content of .mmd files to https://mermaid.live\n```\n\n## 🔍 Common Analysis Patterns\n\n### 1. Code Health Assessment\n```bash\n# Quick health check\ncode2llm ./ -f toon\ncat analysis.toon | grep -E \"(HEALTH|REFACTOR)\"\n```\n\n### 2. Refactoring Planning\n```bash\n# Get refactoring queue\ncode2llm ./ -f evolution\ncat evolution.toon.yaml\n\n# Focus on specific issues\ncode2llm ./ -f toon --refactor --smell god_function\n```\n\n### 3. LLM Assistance\n```bash\n# Generate context for AI\ncode2llm ./ -f context\ncat context.md\n\n# Use with Claude: \"Based on this context, help me refactor the god modules\"\n```\n\n### 4. Team Documentation\n```bash\n# Generate all docs for team\ncode2llm ./ -f all -o ./docs/\n\n# Create visual diagrams\nopen docs/flow.png\n```\n\n## 📊 Interpreting Metrics\n\n### Complexity Metrics (CC)\n- **🔴 Critical (≥5.0)**: Immediate refactoring needed\n- **🟠 High (3.0-4.9)**: Consider refactoring\n- **🟡 Medium (1.5-2.9)**: Monitor complexity\n- **🟢 Low (0.1-1.4)**: Acceptable\n- **⚪ Basic (0.0)**: Simple functions\n\n### Module Health\n- **GOD Module**: Too large (>500 lines, >20 methods)\n- **HUB**: High fan-out (calls many modules)\n- **FAN-IN**: High incoming dependencies\n- **CYCLES**: Circular dependencies\n\n### Data Flow Indicators\n- **PIPELINE**: Sequential data processing\n- **CONTRACT**: Clear input/output specification\n- **SIDE_EFFECT**: External state modification\n\n## 🛠️ Integration Examples\n\n### CI/CD Pipeline\n```bash\n#!/bin/bash\n# Analyze code quality in CI\ncode2llm ./ -f toon -o ./analysis\nif grep -q \"🔴 GOD\" ./analysis/analysis.toon; then\n    echo \"❌ God modules detected\"\n    exit 1\nfi\n```\n\n### Pre-commit Hook\n```bash\n#!/bin/sh\n# .git/hooks/pre-commit\ncode2llm ./ -f toon -o ./temp_analysis\nif grep -q \"🔴\" ./temp_analysis/analysis.toon; then\n    echo \"⚠️  Critical issues found. Review before committing.\"\nfi\nrm -rf ./temp_analysis\n```\n\n### Documentation Generation\n```bash\n# Generate docs for README\ncode2llm ./ -f context -o ./docs/\necho \"## Architecture\" >> README.md\ncat docs/context.md >> README.md\n```\n\n## 📚 Next Steps\n\n1. **Review `analysis.toon`** - Identify critical issues\n2. **Check `evolution.toon.yaml`** - Plan refactoring priorities\n3. **Use `context.md`** - Get LLM assistance for complex changes\n4. **Reference visualizations** - Understand system architecture\n5. **Track progress** - Re-run analysis after changes\n\n## 🔧 Advanced Usage\n\n### Custom Analysis\n```bash\n# Deep analysis with all insights\ncode2llm ./ -m hybrid -f all --max-depth 15 -v\n\n# Performance-optimized\ncode2llm ./ -m static -f toon --strategy quick\n\n# Refactoring-focused\ncode2llm ./ -f toon,evolution --refactor\n```\n\n### Output Customization\n```bash\n# Separate output directories\ncode2llm ./ -f all -o ./analysis-$(date +%Y%m%d)\n\n# Split YAML into multiple files\ncode2llm ./ -f yaml --split-output\n\n# Separate orphaned functions\ncode2llm ./ -f yaml --separate-orphans\n```\n\n---\n\n**Generated by**: `code2llm ./ -f all --readme`  \n**Analysis Date**: 2026-06-08  \n**Total Functions**: 22  \n**Total Classes**: 1  \n**Modules**: 28  \n\nFor more information about code2llm, visit: https://github.com/tom-sapletta/code2llm\n", "is_subdir": false}, {"name": "context.md", "rel_path": "context.md", "path": "context.md", "size": "5.8KB", "icon": "📝", "type": "markdown", "type_name": "Markdown", "content": "# System Architecture Analysis\n<!-- generated in 0.00s -->\n\n## Overview\n\n- **Project**: /home/tom/github/semcod/nlp2env\n- **Primary Language**: shell\n- **Languages**: shell: 10, python: 6, yml: 5, txt: 2, yaml: 1\n- **Analysis Mode**: static\n- **Total Functions**: 22\n- **Total Classes**: 1\n- **Modules**: 28\n- **Entry Points**: 14\n\n## Architecture by Module\n\n### src.nlp2env.env_file\n- **Functions**: 10\n- **Classes**: 1\n- **File**: `env_file.py`\n\n### src.nlp2env_mcp.server\n- **Functions**: 5\n- **File**: `server.py`\n\n### scripts.test-mcp-live\n- **Functions**: 3\n- **File**: `test-mcp-live.sh`\n\n### src.nlp2env.profiles\n- **Functions**: 2\n- **File**: `profiles.py`\n\n### examples.integrators.mcp-stdio.e2e\n- **Functions**: 1\n- **File**: `e2e.sh`\n\n### examples.integrators.todomat-dispatch.e2e\n- **Functions**: 1\n- **File**: `e2e.sh`\n\n### examples.write.apply-text.e2e\n- **Functions**: 1\n- **File**: `e2e.sh`\n\n### examples.write.custom-keys.e2e\n- **Functions**: 1\n- **File**: `e2e.sh`\n\n## Key Entry Points\n\nMain execution flows into the system:\n\n### src.nlp2env.env_file.EnvFile.apply_text\n> Parse KEY=value lines or simple 'key: value' pairs from text.\n- **Calls**: text.splitlines, raw.strip, line.startswith, line.split, None.strip, line.split, None.replace, re.match\n\n### src.nlp2env.env_file.EnvFile.load\n- **Calls**: src.nlp2env.env_file.resolve_env_path, resolved.is_file, cls, None.splitlines, raw.strip, _LINE_RE.match, resolved.read_text, line.startswith\n\n### src.nlp2env.env_file.EnvFile.save\n- **Calls**: self.path.parent.mkdir, sorted, self.path.write_text, self.path.is_file, self.backup, re.search, lines.append, None.join\n\n### src.nlp2env.env_file.EnvFile.backup\n- **Calls**: None.strftime, dest_root.mkdir, shutil.copy2, self.path.is_file, datetime.now\n\n### src.nlp2env.env_file.EnvFile.set_many\n- **Calls**: updates.items, ValueError, self.values.get, re.match\n\n### src.nlp2env.env_file.EnvFile.list_masked\n- **Calls**: src.nlp2env.env_file.mask_value, sorted, self.values.items\n\n### src.nlp2env_mcp.server.main\n- **Calls**: None.run, src.nlp2env_mcp.server.build_mcp\n\n### src.nlp2env.env_file.EnvFile.get\n- **Calls**: self.values.get\n\n### examples.integrators.mcp-stdio.e2e.print\n\n### examples.integrators.todomat-dispatch.e2e.print\n\n### examples.write.apply-text.e2e.print\n\n### examples.write.custom-keys.e2e.print\n\n### src.nlp2env.env_file.EnvFile.delete\n\n### scripts.test-mcp-live.print\n\n## Process Flows\n\nKey execution flows identified:\n\n### Flow 1: apply_text\n```\napply_text [src.nlp2env.env_file.EnvFile]\n```\n\n### Flow 2: load\n```\nload [src.nlp2env.env_file.EnvFile]\n  └─ →> resolve_env_path\n```\n\n### Flow 3: save\n```\nsave [src.nlp2env.env_file.EnvFile]\n```\n\n### Flow 4: backup\n```\nbackup [src.nlp2env.env_file.EnvFile]\n```\n\n### Flow 5: set_many\n```\nset_many [src.nlp2env.env_file.EnvFile]\n```\n\n### Flow 6: list_masked\n```\nlist_masked [src.nlp2env.env_file.EnvFile]\n  └─ →> mask_value\n```\n\n### Flow 7: main\n```\nmain [src.nlp2env_mcp.server]\n  └─> build_mcp\n```\n\n### Flow 8: get\n```\nget [src.nlp2env.env_file.EnvFile]\n```\n\n### Flow 9: print\n```\nprint [examples.integrators.mcp-stdio.e2e]\n```\n\n### Flow 10: delete\n```\ndelete [src.nlp2env.env_file.EnvFile]\n```\n\n## Key Classes\n\n### src.nlp2env.env_file.EnvFile\n- **Methods**: 8\n- **Key Methods**: src.nlp2env.env_file.EnvFile.load, src.nlp2env.env_file.EnvFile.get, src.nlp2env.env_file.EnvFile.set_many, src.nlp2env.env_file.EnvFile.delete, src.nlp2env.env_file.EnvFile.list_masked, src.nlp2env.env_file.EnvFile.backup, src.nlp2env.env_file.EnvFile.save, src.nlp2env.env_file.EnvFile.apply_text\n\n## Data Transformation Functions\n\nKey functions that process and transform data:\n\n## Public API Surface\n\nFunctions exposed as public API (no underscore prefix):\n\n- `src.nlp2env_mcp.server.build_mcp` - 95 calls\n- `src.nlp2env.env_file.EnvFile.apply_text` - 16 calls\n- `src.nlp2env.env_file.EnvFile.load` - 15 calls\n- `src.nlp2env.env_file.resolve_env_path` - 14 calls\n- `src.nlp2env.env_file.EnvFile.save` - 12 calls\n- `src.nlp2env.profiles.email_profile_from_dict` - 8 calls\n- `src.nlp2env.env_file.EnvFile.backup` - 5 calls\n- `src.nlp2env.env_file.EnvFile.set_many` - 4 calls\n- `src.nlp2env.env_file.EnvFile.list_masked` - 3 calls\n- `src.nlp2env.profiles.email_profile_status` - 3 calls\n- `src.nlp2env_mcp.server.main` - 2 calls\n- `src.nlp2env.env_file.mask_value` - 2 calls\n- `src.nlp2env.env_file.EnvFile.get` - 1 calls\n- `examples.integrators.mcp-stdio.e2e.print` - 0 calls\n- `examples.integrators.todomat-dispatch.e2e.print` - 0 calls\n- `examples.write.apply-text.e2e.print` - 0 calls\n- `examples.write.custom-keys.e2e.print` - 0 calls\n- `src.nlp2env.env_file.EnvFile.delete` - 0 calls\n- `scripts.test-mcp-live.print` - 0 calls\n\n## System Interactions\n\nHow components interact:\n\n```mermaid\ngraph TD\n    apply_text --> splitlines\n    apply_text --> strip\n    apply_text --> startswith\n    apply_text --> split\n    load --> resolve_env_path\n    load --> is_file\n    load --> cls\n    load --> splitlines\n    load --> strip\n    save --> mkdir\n    save --> sorted\n    save --> write_text\n    save --> is_file\n    save --> backup\n    backup --> strftime\n    backup --> mkdir\n    backup --> copy2\n    backup --> is_file\n    backup --> now\n    set_many --> items\n    set_many --> ValueError\n    set_many --> get\n    set_many --> match\n    list_masked --> mask_value\n    list_masked --> sorted\n    list_masked --> items\n    main --> run\n    main --> build_mcp\n    get --> get\n```\n\n## Reverse Engineering Guidelines\n\n1. **Entry Points**: Start analysis from the entry points listed above\n2. **Core Logic**: Focus on classes with many methods\n3. **Data Flow**: Follow data transformation functions\n4. **Process Flows**: Use the flow diagrams for execution paths\n5. **API Surface**: Public API functions reveal the interface\n\n## Context for LLM\n\nMaintain the identified architectural patterns and public API surface when suggesting changes.", "is_subdir": false}, {"name": "calls.mmd", "rel_path": "calls.mmd", "path": "calls.mmd", "size": "709B", "icon": "📈", "type": "mermaid", "type_name": "Mermaid", "content": "flowchart LR\n%% generated in 0.00s\n    subgraph src__nlp2env\n        src__nlp2env__env_file__resolve_env_path[&quot;resolve_env_path&quot;]\n        src__nlp2env__env_file__mask_value[&quot;mask_value&quot;]\n        src__nlp2env__env_file__EnvFile__list_masked[&quot;list_masked&quot;]\n        src__nlp2env__env_file__EnvFile__load[&quot;load&quot;]\n    end\n    subgraph src__nlp2env_mcp\n        src__nlp2env_mcp__server__build_mcp[&quot;build_mcp&quot;]\n        src__nlp2env_mcp__server__main[&quot;main&quot;]\n    end\n    src__nlp2env_mcp__server__main --&gt; src__nlp2env_mcp__server__build_mcp\n    src__nlp2env__env_file__EnvFile__load --&gt; src__nlp2env__env_file__resolve_env_path\n    src__nlp2env__env_file__EnvFile__list_masked --&gt; src__nlp2env__env_file__mask_value\n", "is_subdir": false}, {"name": "compact_flow.mmd", "rel_path": "compact_flow.mmd", "path": "compact_flow.mmd", "size": "174B", "icon": "📈", "type": "mermaid", "type_name": "Mermaid", "content": "flowchart TD\n%% generated in 0.00s\n    src__nlp2env[&quot;src.nlp2env&lt;br/&gt;12 funcs&quot;]\n    src__nlp2env_mcp[&quot;src.nlp2env_mcp&lt;br/&gt;5 funcs&quot;]\n    src__nlp2env_mcp ==&gt;|10| src__nlp2env\n", "is_subdir": false}, {"name": "flow.mmd", "rel_path": "flow.mmd", "path": "flow.mmd", "size": "1.1KB", "icon": "📈", "type": "mermaid", "type_name": "Mermaid", "content": "flowchart TD\n%% generated in 0.00s\n\n    %% Entry points (blue)\n    classDef entry fill:#4dabf7,stroke:#1971c2,color:#fff\n\n    subgraph Core\n        src__nlp2env_mcp__server__build_mcp[&quot;build_mcp&quot;]\n        src__nlp2env_mcp__server__main[&quot;main&quot;]\n        src__nlp2env__env_file__resolve_env_path[&quot;resolve_env_path&quot;]\n        src__nlp2env__env_file__EnvFile__load[&quot;load&quot;]\n        src__nlp2env__env_file__EnvFile__get[&quot;get&quot;]\n        src__nlp2env__env_file__EnvFile__set_many[&quot;set_many&quot;]\n        src__nlp2env__env_file__EnvFile__delete[&quot;delete&quot;]\n        src__nlp2env__env_file__EnvFile__list_masked[&quot;list_masked&quot;]\n        src__nlp2env__env_file__EnvFile__backup[&quot;backup&quot;]\n        src__nlp2env__env_file__EnvFile__save[&quot;save&quot;]\n        src__nlp2env__env_file__EnvFile__apply_text[&quot;apply_text&quot;]\n    end\n\n    class src__nlp2env_mcp__server__main,src__nlp2env__env_file__EnvFile__load,src__nlp2env__env_file__EnvFile__get,src__nlp2env__env_file__EnvFile__set_many,src__nlp2env__env_file__EnvFile__delete,src__nlp2env__env_file__EnvFile__list_masked,src__nlp2env__env_file__EnvFile__backup,src__nlp2env__env_file__EnvFile__save,src__nlp2env__env_file__EnvFile__apply_text entry\n", "is_subdir": false}, {"name": "prompt.txt", "rel_path": "prompt.txt", "path": "prompt.txt", "size": "2.9KB", "icon": "📄", "type": "text", "type_name": "Text", "content": "You are an AI assistant helping me understand and improve a codebase.\n# generated in 0.00s\nUse the attached/generated files as the authoritative context.\nYour goal is to refactor the project based on these files, not just summarize it.\n\nwe are in project path: nlp2env\n\nFiles for analysis:\n\nNote: project/validation.toon.yaml and project/duplication.toon.yaml are generated by external tools (vallm and redup)\n- analysis.toon.yaml  (Health diagnostics - complexity metrics, god modules, coupling issues, refactoring priorities) [3KB]\n- map.toon.yaml  (Structural map - files, sizes, imports, exports, signatures, project header) [3KB]\n- evolution.toon.yaml  (Refactoring queue - ranked actions by impact/effort, risks, metrics targets, history) [1KB]\n- project.toon.yaml  (Compact project overview - generated from project.yaml data) [1KB]\n- context.md  (LLM narrative - architecture summary and project context) [5KB]\n\nMissing files (not generated in this run):\n- README.md\n\nTask:\n- Treat this prompt as a refactoring brief: identify the highest-priority changes and prepare concrete edits.\n- Use the file set to decide whether the first pass should focus on correctness, duplication, complexity reduction, or architecture cleanup.\n- If you can safely implement the refactor, do it; otherwise give an exact file-by-file change plan and test plan.\n- Use analysis.toon.yaml to locate high-CC functions and god modules that should be split first.\n- Keep module boundaries intact and update imports/exports according to map.toon.yaml.\n- Use evolution.toon.yaml as the execution backlog and work from the top-ranked items.\n- Keep project.toon.yaml aligned with the refactored architecture.\n\nPriority Order:\nP1 — Split or simplify the highest-CC / god modules identified in analysis.toon.yaml.\nP1 — Preserve module boundaries and update imports/exports according to map.toon.yaml.\nP2 — Keep the compact project overview in project.toon.yaml aligned with the refactor.\nP2 — Execute the highest-impact items from evolution.toon.yaml in order of benefit/risk.\n\nFocus Areas for Analysis:\n1. **Code Health Analysis** - Review complexity metrics, god modules, coupling issues from analysis.toon.yaml\n2. **Structural Map** - Use map.toon.yaml to inspect imports, exports, signatures, and the project header\n3. **Refactoring Priorities** - Examine ranked refactoring actions and risk assessment from evolution.toon.yaml\n4. **Project Overview** - Review the compact project overview from project.toon.yaml\n\nAnalysis Strategy:\n- Start with analysis.toon.yaml for health metrics, then map.toon.yaml for structure and signatures\n- Review evolution.toon.yaml for action priorities and next steps\n- Compare the compact project overview in project.toon.yaml with the main analysis files\n\nConstraints:\n- Prefer minimal, incremental changes.\n- Maintain full backward compatibility.\n- Base recommendations on concrete metrics from the provided files.\n- If uncertain, ask clarifying questions.\n", "is_subdir": false}, {"name": "mermaid.export", "rel_path": "mermaid.export", "path": "mermaid.export", "size": "2.1KB", "icon": "📄", "type": "unknown", "type_name": "EXPORT", "content": "[Binary file]", "is_subdir": false}, {"name": "analysis.toon.yaml", "rel_path": "analysis.toon.yaml", "path": "analysis.toon.yaml", "size": "3.1KB", "icon": "⚙️", "type": "yaml", "type_name": "YAML", "content": "# code2llm | 28f 1885L | shell:10,python:6,yml:5,txt:2,yaml:1,toml:1,json:1,env:1 | 2026-06-08\n# generated in 0.01s\n# CC̅=2.8 | critical:0/22 | dups:0 | cycles:0\n\nHEALTH[0]: ok\n\nREFACTOR[0]: none needed\n\nPIPELINES[8]:\n  [1] Src [main]: main → build_mcp → resolve_env_path\n      PURITY: 100% pure\n  [2] Src [load]: load → resolve_env_path\n      PURITY: 100% pure\n  [3] Src [get]: get\n      PURITY: 100% pure\n  [4] Src [set_many]: set_many\n      PURITY: 100% pure\n  [5] Src [list_masked]: list_masked → mask_value\n      PURITY: 100% pure\n  [6] Src [backup]: backup\n      PURITY: 100% pure\n  [7] Src [save]: save\n      PURITY: 100% pure\n  [8] Src [apply_text]: apply_text\n      PURITY: 100% pure\n\nLAYERS:\n  src/                            CC̄=3.6    ←in:0  →out:0\n  │ server                     243L  0C    5m  CC=2      ←0\n  │ env_file                   126L  1C   10m  CC=10     ←1\n  │ profiles                    65L  0C    2m  CC=5      ←1\n  │ __init__                    13L  0C    0m  CC=0.0    ←0\n  │ __main__                     6L  0C    0m  CC=0.0    ←0\n  │ __init__                     1L  0C    0m  CC=0.0    ←0\n  │\n  examples/                       CC̄=0.0    ←in:0  →out:0\n  │ prompts-multilang.txt      229L  0C    0m  CC=0.0    ←0\n  │ e2e.sh                      80L  0C    1m  CC=0.0    ←0\n  │ prompts-multilang.log.txt    63L  0C    0m  CC=0.0    ←0\n  │ e2e.sh                      60L  0C    1m  CC=0.0    ←0\n  │ e2e.sh                      58L  0C    1m  CC=0.0    ←0\n  │ e2e.sh                      55L  0C    1m  CC=0.0    ←0\n  │ run-e2e.sh                  39L  0C    0m  CC=0.0    ←0\n  │ e2e.sh                      31L  0C    0m  CC=0.0    ←0\n  │ e2e-multilang.sh            28L  0C    0m  CC=0.0    ←0\n  │ mcp-config.cursor.json      11L  0C    0m  CC=0.0    ←0\n  │ docker-compose.yml           7L  0C    0m  CC=0.0    ←0\n  │ docker-compose.yml           7L  0C    0m  CC=0.0    ←0\n  │ docker-compose.yml           7L  0C    0m  CC=0.0    ←0\n  │ docker-compose.yml           7L  0C    0m  CC=0.0    ←0\n  │ docker-compose.yml           7L  0C    0m  CC=0.0    ←0\n  │ prompts.env                  2L  0C    0m  CC=0.0    ←0\n  │\n  scripts/                        CC̄=0.0    ←in:0  →out:0\n  │ test-mcp-live.sh            67L  0C    1m  CC=0.0    ←0\n  │\n  ./                              CC̄=0.0    ←in:0  →out:0\n  │ !! goal.yaml                  512L  0C    0m  CC=0.0    ←0\n  │ pyproject.toml              59L  0C    0m  CC=0.0    ←0\n  │ project.sh                  59L  0C    0m  CC=0.0    ←0\n  │ Makefile                    42L  0C    0m  CC=0.0    ←0\n  │ tree.sh                      1L  0C    0m  CC=0.0    ←0\n  │\n\nCOUPLING:\n                       src.nlp2env  src.nlp2env_mcp\n      src.nlp2env               ──              ←10  hub\n  src.nlp2env_mcp               10               ──  !! fan-out\n  CYCLES: none\n  HUB: src.nlp2env/ (fan-in=10)\n  SMELL: src.nlp2env_mcp/ fan-out=10 → split needed\n\nEXTERNAL:\n  validation: run `vallm batch .` → validation.toon\n  duplication: run `redup scan .` → duplication.toon\n", "is_subdir": false}, {"name": "calls.toon.yaml", "rel_path": "calls.toon.yaml", "path": "calls.toon.yaml", "size": "1023B", "icon": "⚙️", "type": "yaml", "type_name": "YAML", "content": "# code2llm call graph | /home/tom/github/semcod/nlp2env\n# generated in 0.00s\n# nodes: 6 | edges: 3 | modules: 2\n# CC̄=2.8\n\nHUBS[20]:\n  src.nlp2env_mcp.server.build_mcp\n    CC=2  in:1  out:95  total:96\n  src.nlp2env.env_file.resolve_env_path\n    CC=4  in:2  out:14  total:16\n  src.nlp2env.env_file.EnvFile.load\n    CC=10  in:0  out:15  total:15\n  src.nlp2env.env_file.mask_value\n    CC=4  in:7  out:2  total:9\n  src.nlp2env.env_file.EnvFile.list_masked\n    CC=2  in:0  out:3  total:3\n  src.nlp2env_mcp.server.main\n    CC=1  in:0  out:2  total:2\n\nMODULES:\n  src.nlp2env.env_file  [4 funcs]\n    list_masked  CC=2  out:3\n    load  CC=10  out:15\n    mask_value  CC=4  out:2\n    resolve_env_path  CC=4  out:14\n  src.nlp2env_mcp.server  [2 funcs]\n    build_mcp  CC=2  out:95\n    main  CC=1  out:2\n\nEDGES:\n  src.nlp2env_mcp.server.main → src.nlp2env_mcp.server.build_mcp\n  src.nlp2env.env_file.EnvFile.load → src.nlp2env.env_file.resolve_env_path\n  src.nlp2env.env_file.EnvFile.list_masked → src.nlp2env.env_file.mask_value\n", "is_subdir": false}, {"name": "calls.yaml", "rel_path": "calls.yaml", "path": "calls.yaml", "size": "2.3KB", "icon": "⚙️", "type": "yaml", "type_name": "YAML", "content": "project: /home/tom/github/semcod/nlp2env\ngenerated_from: code2llm call graph analysis\nstats:\n  total_nodes: 6\n  total_edges: 3\n  modules_count: 2\nnodes:\n  src.nlp2env.env_file.resolve_env_path:\n    name: resolve_env_path\n    module: src.nlp2env.env_file\n    line: 25\n    cyclomatic_complexity: 4\n    calls_out: 14\n    calls_in: 2\n  src.nlp2env.env_file.mask_value:\n    name: mask_value\n    module: src.nlp2env.env_file\n    line: 17\n    cyclomatic_complexity: 4\n    calls_out: 2\n    calls_in: 7\n  src.nlp2env.env_file.EnvFile.list_masked:\n    name: list_masked\n    module: src.nlp2env.env_file\n    line: 83\n    cyclomatic_complexity: 2\n    calls_out: 3\n    calls_in: 0\n  src.nlp2env.env_file.EnvFile.load:\n    name: load\n    module: src.nlp2env.env_file\n    line: 43\n    cyclomatic_complexity: 10\n    calls_out: 15\n    calls_in: 0\n  src.nlp2env_mcp.server.build_mcp:\n    name: build_mcp\n    module: src.nlp2env_mcp.server\n    line: 35\n    cyclomatic_complexity: 2\n    calls_out: 95\n    calls_in: 1\n  src.nlp2env_mcp.server.main:\n    name: main\n    module: src.nlp2env_mcp.server\n    line: 238\n    cyclomatic_complexity: 1\n    calls_out: 2\n    calls_in: 0\nedges:\n- caller: src.nlp2env_mcp.server.main\n  callee: src.nlp2env_mcp.server.build_mcp\n  call_type: resolved\n- caller: src.nlp2env.env_file.EnvFile.load\n  callee: src.nlp2env.env_file.resolve_env_path\n  call_type: resolved\n- caller: src.nlp2env.env_file.EnvFile.list_masked\n  callee: src.nlp2env.env_file.mask_value\n  call_type: resolved\nmodules:\n  src.nlp2env.env_file:\n  - src.nlp2env.env_file.EnvFile.list_masked\n  - src.nlp2env.env_file.EnvFile.load\n  - src.nlp2env.env_file.mask_value\n  - src.nlp2env.env_file.resolve_env_path\n  src.nlp2env_mcp.server:\n  - src.nlp2env_mcp.server.build_mcp\n  - src.nlp2env_mcp.server.main\nentry_points:\n- examples.integrators.mcp-stdio.e2e.print\n- examples.integrators.todomat-dispatch.e2e.print\n- examples.write.apply-text.e2e.print\n- examples.write.custom-keys.e2e.print\n- scripts.test-mcp-live.print\n- src.nlp2env.env_file.EnvFile.apply_text\n- src.nlp2env.env_file.EnvFile.backup\n- src.nlp2env.env_file.EnvFile.delete\n- src.nlp2env.env_file.EnvFile.get\n- src.nlp2env.env_file.EnvFile.list_masked\n- src.nlp2env.env_file.EnvFile.load\n- src.nlp2env.env_file.EnvFile.save\n- src.nlp2env.env_file.EnvFile.set_many\n- src.nlp2env_mcp.server.main\n", "is_subdir": false}, {"name": "evolution.toon.yaml", "rel_path": "evolution.toon.yaml", "path": "evolution.toon.yaml", "size": "1.5KB", "icon": "⚙️", "type": "yaml", "type_name": "YAML", "content": "# code2llm/evolution | 17 func | 3f | 2026-06-08\n# generated in 0.00s\n\nNEXT[1] (ranked by impact):\n  [1] !! SPLIT           goal.yaml\n      WHY: 512L, 0 classes, max CC=0\n      EFFORT: ~4h  IMPACT: 0\n\n\nRISKS[1]:\n  ⚠ Splitting goal.yaml may break 0 import paths\n\nMETRICS-TARGET:\n  CC̄:          3.6 → ≤2.5\n  max-CC:      10 → ≤5\n  god-modules: 1 → 0\n  high-CC(≥15): 0 → ≤0\n  hub-types:   0 → ≤0\n\nPATTERNS (language parser shared logic):\n  _extract_declarations() in base.py — unified extraction for:\n    - TypeScript: interfaces, types, classes, functions, arrow funcs\n    - PHP: namespaces, traits, classes, functions, includes\n    - Ruby: modules, classes, methods, requires\n    - C++: classes, structs, functions, #includes\n    - C#: classes, interfaces, methods, usings\n    - Java: classes, interfaces, methods, imports\n    - Go: packages, functions, structs\n    - Rust: modules, functions, traits, use statements\n\n  Shared regex patterns per language:\n    - import: language-specific import/require/using patterns\n    - class: class/struct/trait declarations with inheritance\n    - function: function/method signatures with visibility\n    - brace_tracking: for C-family languages ({ })\n    - end_keyword_tracking: for Ruby (module/class/def...end)\n\n  Benefits:\n    - Consistent extraction logic across all languages\n    - Reduced code duplication (~70% reduction in parser LOC)\n    - Easier maintenance: fix once, apply everywhere\n    - Standardized FunctionInfo/ClassInfo models\n\nHISTORY:\n  (first run — no previous data)\n", "is_subdir": false}, {"name": "map.toon.yaml", "rel_path": "map.toon.yaml", "path": "map.toon.yaml", "size": "3.1KB", "icon": "⚙️", "type": "yaml", "type_name": "YAML", "content": "# nlp2env | 28f 1885L | yaml:1,toml:1,shell:10,yml:5,json:1,env:1,txt:2,python:6 | 2026-06-08\n# generated in 0.00s\n# stats: 22 func | 0 cls | 28 mod | CC̄=2.8 | critical:0 | cycles:0\n# alerts[4]: fan-out build_mcp=36; fan-out EnvFile.load=12; fan-out EnvFile.save=12; fan-out EnvFile.apply_text=10\n# hotspots[5]: build_mcp fan=36; EnvFile.load fan=12; EnvFile.save fan=12; EnvFile.apply_text fan=10; email_profile_from_dict fan=8\n# evolution: baseline\n# Keys: M=modules, D=details, i=imports, e=exports, c=classes, f=functions, m=methods\nM[28]:\n  Makefile,42\n  examples/integrators/mcp-stdio/docker-compose.yml,7\n  examples/integrators/mcp-stdio/e2e.sh,60\n  examples/integrators/mcp-stdio/mcp-config.cursor.json,11\n  examples/integrators/todomat-dispatch/docker-compose.yml,7\n  examples/integrators/todomat-dispatch/e2e.sh,80\n  examples/integrators/todomat-dispatch/prompts.env,2\n  examples/run-e2e.sh,39\n  examples/write/apply-text/docker-compose.yml,7\n  examples/write/apply-text/e2e.sh,58\n  examples/write/custom-keys/docker-compose.yml,7\n  examples/write/custom-keys/e2e.sh,55\n  examples/write/smtp-email/docker-compose.yml,7\n  examples/write/smtp-email/e2e.sh,31\n  examples/write/smtp-email/e2e-multilang.sh,28\n  examples/write/smtp-email/prompts-multilang.txt,229\n  examples/write/smtp-email/prompts-multilang.log.txt,63\n  goal.yaml,512\n  project.sh,59\n  pyproject.toml,59\n  scripts/test-mcp-live.sh,67\n  src/nlp2env/__init__.py,13\n  src/nlp2env/env_file.py,126\n  src/nlp2env/profiles.py,65\n  src/nlp2env_mcp/__init__.py,1\n  src/nlp2env_mcp/__main__.py,6\n  src/nlp2env_mcp/server.py,243\n  tree.sh,1\nD:\n  src/nlp2env/env_file.py:\n    e: EnvFile,mask_value,resolve_env_path\n    EnvFile: load(1),get(2),set_many(1),delete(1),list_masked(0),backup(1),save(0),apply_text(1)\n    mask_value(key;value)\n    resolve_env_path(path)\n  src/nlp2env/profiles.py:\n    e: email_profile_from_dict,email_profile_status\n    email_profile_from_dict(data)\n    email_profile_status(values)\n  src/nlp2env_mcp/server.py:\n    e: _ok,_err,_load,build_mcp,main\n    _ok(payload)\n    _err(message)\n    _load(path)\n    build_mcp()\n    main()\n  goal.yaml:\n  Makefile:\n  pyproject.toml:\n  tree.sh:\n  project.sh:\n  examples/run-e2e.sh:\n  examples/integrators/mcp-stdio/e2e.sh:\n    e: print\n    print()\n  examples/integrators/mcp-stdio/docker-compose.yml:\n  examples/integrators/mcp-stdio/mcp-config.cursor.json:\n  examples/integrators/todomat-dispatch/e2e.sh:\n    e: print\n    print()\n  examples/integrators/todomat-dispatch/docker-compose.yml:\n  examples/integrators/todomat-dispatch/prompts.env:\n  examples/write/apply-text/e2e.sh:\n    e: print\n    print()\n  examples/write/apply-text/docker-compose.yml:\n  examples/write/smtp-email/e2e.sh:\n  examples/write/smtp-email/docker-compose.yml:\n  examples/write/smtp-email/prompts-multilang.log.txt:\n  examples/write/smtp-email/e2e-multilang.sh:\n  examples/write/smtp-email/prompts-multilang.txt:\n  examples/write/custom-keys/e2e.sh:\n    e: print\n    print()\n  examples/write/custom-keys/docker-compose.yml:\n  src/nlp2env_mcp/__init__.py:\n  src/nlp2env_mcp/__main__.py:\n  src/nlp2env/__init__.py:\n  scripts/test-mcp-live.sh:\n    e: print,print,print\n    print()\n    print()\n    print()\n", "is_subdir": false}, {"name": "planfile-tickets.yaml", "rel_path": "planfile-tickets.yaml", "path": "planfile-tickets.yaml", "size": "1.8KB", "icon": "⚙️", "type": "yaml", "type_name": "YAML", "content": "source: code2llm\n# generated in 0.00s\nschema: code2llm.planfile_tickets.v1\nproject_root: /home/tom/github/semcod/nlp2env\ntickets:\n- signal: code2llm_smell_god_function\n  title: 'Address code smell: God Function: build_mcp'\n  description: 'code2llm reports `God Function: build_mcp` in `src/nlp2env_mcp/server.py:35`.\n\n\n    Function ''build_mcp'' is oversized: CC=2, fan-out=36, mutations=1.\n\n\n    Make the smallest refactor that removes the smell and run local tests.'\n  priority: normal\n  labels:\n  - llm-ready\n  - code2llm\n  - code-smell\n  - god-function\n  files:\n  - src/nlp2env_mcp/server.py\n  dedupe_key: 'code2llm:smell:god_function:src/nlp2env_mcp/server.py:35:God Function:\n    build_mcp'\n- signal: code2llm_smell_god_function\n  title: 'Address code smell: God Function: load'\n  description: 'code2llm reports `God Function: load` in `src/nlp2env/env_file.py:43`.\n\n\n    Function ''load'' is oversized: CC=10, fan-out=12, mutations=0.\n\n\n    Make the smallest refactor that removes the smell and run local tests.'\n  priority: normal\n  labels:\n  - llm-ready\n  - code2llm\n  - code-smell\n  - god-function\n  files:\n  - src/nlp2env/env_file.py\n  dedupe_key: 'code2llm:smell:god_function:src/nlp2env/env_file.py:43:God Function:\n    load'\n- signal: code2llm_smell_god_function\n  title: 'Address code smell: God Function: save'\n  description: 'code2llm reports `God Function: save` in `src/nlp2env/env_file.py:96`.\n\n\n    Function ''save'' is oversized: CC=6, fan-out=12, mutations=0.\n\n\n    Make the smallest refactor that removes the smell and run local tests.'\n  priority: normal\n  labels:\n  - llm-ready\n  - code2llm\n  - code-smell\n  - god-function\n  files:\n  - src/nlp2env/env_file.py\n  dedupe_key: 'code2llm:smell:god_function:src/nlp2env/env_file.py:96:God Function:\n    save'\napplied: []\nskipped: []\n", "is_subdir": false}, {"name": "project.toon.yaml", "rel_path": "project.toon.yaml", "path": "project.toon.yaml", "size": "1.8KB", "icon": "⚙️", "type": "yaml", "type_name": "YAML", "content": "# nlp2env | 22 func | 8f | 1885L | shell | 2026-06-08\n# generated in 0.00s\n\nHEALTH:\n  CC̄=2.8  critical=1 (limit:10)  dup=0  cycles=0\n\nALERTS[4]:\n  !!! high_fan_out     build_mcp = 36 (limit:10)\n  !   high_fan_out     EnvFile.load = 12 (limit:10)\n  !   high_fan_out     EnvFile.save = 12 (limit:10)\n  !   high_fan_out     EnvFile.apply_text = 10 (limit:10)\n\nMODULES[28] (top by size):\n  M[goal.yaml] 512L C:0 F:0 CC↑0 D:0 (yaml)\n  M[src/nlp2env_mcp/server.py] 243L C:0 F:5 CC↑2 D:0 (python)\n  M[examples/write/smtp-email/prompts-multilang.txt] 229L C:0 F:0 CC↑0 D:0 (txt)\n  M[src/nlp2env/env_file.py] 126L C:1 F:10 CC↑10 D:1 (python)\n  M[examples/integrators/todomat-dispatch/e2e.sh] 80L C:0 F:1 CC↑0 D:0 (shell)\n  M[scripts/test-mcp-live.sh] 67L C:0 F:1 CC↑0 D:0 (shell)\n  M[src/nlp2env/profiles.py] 65L C:0 F:2 CC↑5 D:1 (python)\n  M[examples/write/smtp-email/prompts-multilang.log.txt] 63L C:0 F:0 CC↑0 D:0 (txt)\n  M[examples/integrators/mcp-stdio/e2e.sh] 60L C:0 F:1 CC↑0 D:0 (shell)\n  M[project.sh] 59L C:0 F:0 CC↑0 D:0 (shell)\n  M[pyproject.toml] 59L C:0 F:0 CC↑0 D:0 (toml)\n  M[examples/write/apply-text/e2e.sh] 58L C:0 F:1 CC↑0 D:0 (shell)\n  M[examples/write/custom-keys/e2e.sh] 55L C:0 F:1 CC↑0 D:0 (shell)\n  M[Makefile] 42L C:0 F:0 CC↑0 D:0 ()\n  M[examples/run-e2e.sh] 39L C:0 F:0 CC↑0 D:0 (shell)\n  LANGS: shell:10/python:6/yml:5/txt:2/other:1/json:1/env:1/yaml:1/toml:1\n\nHOTSPOTS[4]:\n  ★ build_mcp fan=36  // Orchestrates 36 calls\n  ★ EnvFile.load fan=12  // Orchestrates 12 calls\n  ★ EnvFile.save fan=12  // Orchestrates 12 calls\n  ★ EnvFile.apply_text fan=10  // Parse KEY=value lines or simple 'key: value' pairs from text.\n\nREFACTOR[2]:\n  [1] H/H Split god module goal.yaml (512L, 0 classes)\n  [2] M/M Reduce build_mcp fan-out (currently 36)\n\nEVOLUTION:\n  2026-06-08 CC̄=2.8 crit=1 1885L // Automated analysis\n", "is_subdir": false}];
+        let currentFile = null;
+
+        function renderFileList(filter = '') {
+            const list = document.getElementById('fileList');
+            const filtered = files.filter(f =>
+                f.name.toLowerCase().includes(filter.toLowerCase()) ||
+                f.path.toLowerCase().includes(filter.toLowerCase())
+            );
+
+            if (filtered.length === 0) {
+                list.innerHTML = '<div class="empty-state">No files found</div>';
+                return;
+            }
+
+            // Group by type
+            const groups = {};
+            for (const file of filtered) {
+                const type = file.type_name;
+                if (!groups[type]) groups[type] = [];
+                groups[type].push(file);
+            }
+
+            let html = '';
+            for (const [typeName, groupFiles] of Object.entries(groups)) {
+                html += `
+                    <div class="file-group">
+                        <div class="file-group-title">${typeName} Files (${groupFiles.length})</div>
+                        ${groupFiles.map(f => `
+                            <div class="file-item ${currentFile?.name === f.name ? 'active' : ''}"
+                                 onclick="selectFile('${f.name}')">
+                                <span class="file-icon">${f.icon}</span>
+                                <div class="file-info">
+                                    <div class="file-name">${f.name}</div>
+                                    <div class="file-meta">${f.path}</div>
+                                </div>
+                                <span class="file-size">${f.size}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+
+            list.innerHTML = html;
+        }
+
+        function selectFile(name) {
+            const file = files.find(f => f.name === name);
+            if (!file) return;
+
+            currentFile = file;
+
+            document.getElementById('contentIcon').textContent = file.icon;
+            document.getElementById('contentTitle').textContent = file.name;
+
+            // Actions
+            const actions = document.getElementById('contentActions');
+            actions.innerHTML = `
+                <a href="${file.rel_path}" download class="btn">⬇ Download</a>
+                <a href="${file.rel_path}" target="_blank" class="btn btn-primary">↗ Open Raw</a>
+            `;
+
+            // Content
+            const body = document.getElementById('contentBody');
+            if (file.type === 'markdown') {
+                // Render markdown as HTML using marked.js
+                body.innerHTML = `<div class="markdown-content">${marked.parse(file.content)}</div>`;
+            } else if (file.type === 'html') {
+                // For HTML files, show in iframe for safety
+                body.innerHTML = `<iframe src="${file.rel_path}" style="width:100%;height:100%;border:none;border-radius:0.5rem;"></iframe>`;  # noqa: E501
+            } else if (file.type === 'image') {
+                // For images, display the actual image
+                body.innerHTML = `<div class="image-preview"><img src="${file.rel_path}" alt="${file.name}" style="max-width:100%;max-height:100%;object-fit:contain;border-radius:0.5rem;"></div>`;  # noqa: E501
+            } else if (file.type === 'mermaid') {
+                // Render mermaid diagram
+                const diagramId = 'mermaid-diagram-' + Date.now();
+                body.innerHTML = `<div class="mermaid-content"><pre class="mermaid" id="${diagramId}">${file.content}</pre></div>`;  # noqa: E501
+                // Initialize mermaid on the new element
+                setTimeout(() => {
+                    mermaid.init(undefined, document.getElementById(diagramId));
+                }, 0);
+            } else if (file.type === 'json') {
+                try {
+                    const json = JSON.parse(file.content.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&'));  # noqa: E501
+                    const formatted = JSON.stringify(json, null, 2);
+                    body.innerHTML = `<pre><code class="language-json">${formatted.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code></pre>`;  # noqa: E501
+                    hljs.highlightElement(body.querySelector('code'));
+                } catch {
+                    body.innerHTML = `<pre>${file.content}</pre>`;
+                }
+            } else if (file.type === 'yaml') {
+                // YAML with syntax highlighting
+                body.innerHTML = `<pre><code class="language-yaml">${file.content.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code></pre>`;  # noqa: E501
+                hljs.highlightElement(body.querySelector('code'));
+            } else if (file.type === 'toon') {
+                // TOON with simple highlighting (use ini as closest match for key: value format)
+                body.innerHTML = `<pre><code class="language-ini">${file.content.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code></pre>`;  # noqa: E501
+                hljs.highlightElement(body.querySelector('code'));
+            } else if (file.type === 'code') {
+                // Code files with auto-highlighting
+                body.innerHTML = `<pre><code>${file.content.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code></pre>`;  # noqa: E501
+                hljs.highlightElement(body.querySelector('code'));
+            } else {
+                body.innerHTML = `<pre>${file.content}</pre>`;
+            }
+
+            renderFileList(document.getElementById('search').value);
+        }
+
+        function filterFiles(query) {
+            renderFileList(query);
+        }
+
+        function renderStats() {
+            const stats = {};
+            for (const f of files) {
+                stats[f.type_name] = (stats[f.type_name] || 0) + 1;
+            }
+
+            const grid = document.getElementById('statsGrid');
+            grid.innerHTML = Object.entries(stats)
+                .sort((a, b) => b[1] - a[1])
+                .map(([type, count]) => `
+                    <div class="stat-card">
+                        <div class="stat-value">${count}</div>
+                        <div class="stat-label">${type}</div>
+                    </div>
+                `).join('');
+        }
+
+        // Initialize
+        renderStats();
+        renderFileList();
+
+        // Select first file if available
+        if (files.length > 0) {
+            selectFile(files[0].name);
+        }
+    </script>
+</body>
+</html>

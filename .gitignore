@@ -1,4 +1,8 @@
+.env.ollama
 .env.example
+prompts.log.txt
+prompts.txt
+.code2llm_cache
 backups/
 .idea
 .pactown-sandboxes/

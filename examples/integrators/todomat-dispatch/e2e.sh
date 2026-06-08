@@ -9,7 +9,6 @@ else
 fi
 # shellcheck source=examples/lib/common.sh
 source "$ROOT/examples/lib/common.sh"
-PYTHON="$(resolve_python "$ROOT")"
 EXAMPLE="$_SCRIPT_DIR"
 EXAMPLE_NAME="$(basename "$EXAMPLE")"
 if [[ -n "${NLP2ENV_ROOT:-}" ]]; then
@@ -30,8 +29,7 @@ set +a
 export NLP2ENV_ENV_FILE="$ENV_FILE"
 
 cd "$ROOT"
-export PATH="${ROOT}/.venv/bin:${ROOT}/venv/bin:/usr/local/bin:${PATH}"
-export PYTHONPATH="$ROOT/examples/lib:${PYTHONPATH:-}"
+setup_example_env "$ROOT"
 
 "$PYTHON" - <<'PY'
 import os

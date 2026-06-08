@@ -1,0 +1,64 @@
+source: code2llm
+# generated in 0.00s
+schema: code2llm.planfile_tickets.v1
+project_root: /home/tom/github/semcod/nlp2env
+tickets:
+- signal: code2llm_smell_god_function
+  title: 'Address code smell: God Function: build_mcp'
+  description: 'code2llm reports `God Function: build_mcp` in `src/nlp2env_mcp/server.py:35`.
+
+
+    Function ''build_mcp'' is oversized: CC=2, fan-out=36, mutations=1.
+
+
+    Make the smallest refactor that removes the smell and run local tests.'
+  priority: normal
+  labels:
+  - llm-ready
+  - code2llm
+  - code-smell
+  - god-function
+  files:
+  - src/nlp2env_mcp/server.py
+  dedupe_key: 'code2llm:smell:god_function:src/nlp2env_mcp/server.py:35:God Function:
+    build_mcp'
+- signal: code2llm_smell_god_function
+  title: 'Address code smell: God Function: load'
+  description: 'code2llm reports `God Function: load` in `src/nlp2env/env_file.py:43`.
+
+
+    Function ''load'' is oversized: CC=10, fan-out=12, mutations=0.
+
+
+    Make the smallest refactor that removes the smell and run local tests.'
+  priority: normal
+  labels:
+  - llm-ready
+  - code2llm
+  - code-smell
+  - god-function
+  files:
+  - src/nlp2env/env_file.py
+  dedupe_key: 'code2llm:smell:god_function:src/nlp2env/env_file.py:43:God Function:
+    load'
+- signal: code2llm_smell_god_function
+  title: 'Address code smell: God Function: save'
+  description: 'code2llm reports `God Function: save` in `src/nlp2env/env_file.py:96`.
+
+
+    Function ''save'' is oversized: CC=6, fan-out=12, mutations=0.
+
+
+    Make the smallest refactor that removes the smell and run local tests.'
+  priority: normal
+  labels:
+  - llm-ready
+  - code2llm
+  - code-smell
+  - god-function
+  files:
+  - src/nlp2env/env_file.py
+  dedupe_key: 'code2llm:smell:god_function:src/nlp2env/env_file.py:96:God Function:
+    save'
+applied: []
+skipped: []

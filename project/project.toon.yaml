@@ -1,0 +1,42 @@
+# nlp2env | 22 func | 8f | 1885L | shell | 2026-06-08
+# generated in 0.00s
+
+HEALTH:
+  CC̄=2.8  critical=1 (limit:10)  dup=0  cycles=0
+
+ALERTS[4]:
+  !!! high_fan_out     build_mcp = 36 (limit:10)
+  !   high_fan_out     EnvFile.load = 12 (limit:10)
+  !   high_fan_out     EnvFile.save = 12 (limit:10)
+  !   high_fan_out     EnvFile.apply_text = 10 (limit:10)
+
+MODULES[28] (top by size):
+  M[goal.yaml] 512L C:0 F:0 CC↑0 D:0 (yaml)
+  M[src/nlp2env_mcp/server.py] 243L C:0 F:5 CC↑2 D:0 (python)
+  M[examples/write/smtp-email/prompts-multilang.txt] 229L C:0 F:0 CC↑0 D:0 (txt)
+  M[src/nlp2env/env_file.py] 126L C:1 F:10 CC↑10 D:1 (python)
+  M[examples/integrators/todomat-dispatch/e2e.sh] 80L C:0 F:1 CC↑0 D:0 (shell)
+  M[scripts/test-mcp-live.sh] 67L C:0 F:1 CC↑0 D:0 (shell)
+  M[src/nlp2env/profiles.py] 65L C:0 F:2 CC↑5 D:1 (python)
+  M[examples/write/smtp-email/prompts-multilang.log.txt] 63L C:0 F:0 CC↑0 D:0 (txt)
+  M[examples/integrators/mcp-stdio/e2e.sh] 60L C:0 F:1 CC↑0 D:0 (shell)
+  M[project.sh] 59L C:0 F:0 CC↑0 D:0 (shell)
+  M[pyproject.toml] 59L C:0 F:0 CC↑0 D:0 (toml)
+  M[examples/write/apply-text/e2e.sh] 58L C:0 F:1 CC↑0 D:0 (shell)
+  M[examples/write/custom-keys/e2e.sh] 55L C:0 F:1 CC↑0 D:0 (shell)
+  M[Makefile] 42L C:0 F:0 CC↑0 D:0 ()
+  M[examples/run-e2e.sh] 39L C:0 F:0 CC↑0 D:0 (shell)
+  LANGS: shell:10/python:6/yml:5/txt:2/other:1/json:1/env:1/yaml:1/toml:1
+
+HOTSPOTS[4]:
+  ★ build_mcp fan=36  // Orchestrates 36 calls
+  ★ EnvFile.load fan=12  // Orchestrates 12 calls
+  ★ EnvFile.save fan=12  // Orchestrates 12 calls
+  ★ EnvFile.apply_text fan=10  // Parse KEY=value lines or simple 'key: value' pairs from text.
+
+REFACTOR[2]:
+  [1] H/H Split god module goal.yaml (512L, 0 classes)
+  [2] M/M Reduce build_mcp fan-out (currently 36)
+
+EVOLUTION:
+  2026-06-08 CC̄=2.8 crit=1 1885L // Automated analysis
